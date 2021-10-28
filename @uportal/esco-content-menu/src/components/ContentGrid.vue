@@ -118,7 +118,7 @@ import {
   hasAlternativeMaximizedUrl,
   getRenderUrl,
 } from '../services/managePortletUrl';
-import matchSorter from 'match-sorter';
+import { matchSorter } from 'match-sorter';
 
 export default {
   name: 'ContentGrid',
