@@ -3,15 +3,17 @@
 ## Prerequisits
 
 1.  [Git][]
-2.  [Node.js][] 10.9+ (using [NVM][] is recommended)
+2.  [Node.js][] 10.4+ (using [NVM][] is recommended)
 
 ## Installation
 
 1.  From a terminal or command line
 2.  `git clone https://github.com/uPortal-contrib/uPortal-web-components`
 3.  `cd uPortal-web-components`
-4.  `npm ci`
-5.  `npm run bootstrap`
+4.  `nvm install` (if using [NVM][])
+5.  `nvm use` (if using [NVM][])
+6.  `npm ci`
+7.  `npm run bootstrap`
 
 ## Running a Component Locally
 
