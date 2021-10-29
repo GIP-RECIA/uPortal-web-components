@@ -18,7 +18,7 @@
         <swiper
           ref="favSwiper"
           :options="swiperOption"
-          @transitionEnd="updateSlider"
+          :reach-end="updateSlider"
         >
           <swiper-slide v-for="portlet in favorited" :key="portlet.id">
             <a
@@ -49,7 +49,13 @@
           class="swiper-button-prev"
           @click="slidePrev($event)"
         >
-          <font-awesome-icon icon="chevron-left" />
+          <svg
+            viewBox="0 0 10 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M 6 2 L 3 5 L 6 8" stroke="#fff" fill="none" />
+          </svg>
         </div>
         <div
           slot="button-next"
@@ -57,7 +63,13 @@
           class="swiper-button-next"
           @click="slideNext($event)"
         >
-          <font-awesome-icon icon="chevron-right" />
+          <svg
+            viewBox="0 0 10 10"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M 4 2 L 7 5 L 4 8" stroke="#fff" fill="none" />
+          </svg>
         </div>
       </template>
       <template v-else>
@@ -93,8 +105,7 @@
 import i18n from '../i18n.js';
 import PortletCard from './PortletCard';
 import '../icons.js';
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { swiper, swiperSlide } from 'vue-awesome-swiper';
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper';
 import { elementWidth, sizeValidator } from '../services/sizeTools';
 import byFavoriteOrder from '../services/sortByFavoriteOrder';
 import {
@@ -108,11 +119,10 @@ export default {
   components: {
     ContentGrid,
     PortletCard,
-    swiper,
+    Swiper,
     // false positive
     // eslint-disable-next-line vue/no-unused-components
-    swiperSlide,
-    FontAwesomeIcon,
+    SwiperSlide,
   },
   props: {
     backgroundColor: { type: String, default: 'rgba(0, 0, 0, 0)' },
@@ -250,12 +260,12 @@ export default {
     },
     slideNext(event) {
       event.preventDefault();
-      this.$refs.favSwiper.swiper.slideNext(800);
+      this.$refs.favSwiper.$swiper.slideNext(800);
       this.updateSlider();
     },
     slidePrev(event) {
       event.preventDefault();
-      this.$refs.favSwiper.swiper.slidePrev(800);
+      this.$refs.favSwiper.$swiper.slidePrev(800);
       this.updateSlider();
     },
     timedUpdate() {
@@ -265,13 +275,13 @@ export default {
     },
     updateSlider() {
       if (this.useSwipper && !this.isHidden && this.favorited.length > 0) {
-        if (!this.$refs.favSwiper.swiper.initialized) {
-          this.$refs.favSwiper.swiper.init();
+        if (!this.$refs.favSwiper.$swiper.initialized) {
+          this.$refs.favSwiper.$swiper.init();
         } else {
-          this.$refs.favSwiper.swiper.update();
+          this.$refs.favSwiper.$swiper.update();
         }
-        this.disableNext = this.$refs.favSwiper.swiper.isEnd;
-        this.disablePrev = this.$refs.favSwiper.swiper.isBeginning;
+        this.disableNext = this.$refs.favSwiper.$swiper.isEnd;
+        this.disablePrev = this.$refs.favSwiper.$swiper.isBeginning;
       }
       this.calculateSize();
     },
@@ -280,10 +290,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../../node_modules/swiper/dist/css/swiper.css';
+@import '../../node_modules/swiper/css/swiper.css';
 @import './../styles/vars.scss';
 
-$buttonWidth: 32px;
+$buttonWidth: 42px;
 
 .content-favorites {
   width: inherit;
@@ -362,6 +372,9 @@ $buttonWidth: 32px;
       width: $buttonWidth;
       height: $buttonWidth;
       text-align: center;
+      &::after {
+        content: none;
+      }
     }
 
     .swiper-button-prev {
@@ -439,9 +452,9 @@ $buttonWidth: 32px;
     }
   }
 
-  .svg-inline--fa {
+  svg {
     width: auto;
-    height: 2em; /* or any other relative font sizes */
+    height: $buttonWidth; /* or any other relative font sizes */
 
     /* You would have to include the following two lines to make this work in Safari */
     max-width: 100%;
