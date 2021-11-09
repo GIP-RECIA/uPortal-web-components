@@ -50,11 +50,6 @@
       "autoprefixer": {}
     }
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead"
-  ],
   "description": "Display portlet content in a browsable carousel",
   "bugs": {
     "url": "https://github.com/uPortal-contrib/uPortal-web-components/issues"
