@@ -1,0 +1,66 @@
+{
+  "name": "@uportal/eyebrow-user-info",
+  "version": "1.37.0",
+  "description": "Web component to display into eyebrow menu a user information menu with profile picture and more.",
+  "license": "Apache-2.0",
+  "author": "Julien Gribonvald <julien.gribonvald@gmail.com>",
+  "contributors": [
+    "Grégory Brousse <pro@gregory-brousse.fr>"
+  ],
+  "keywords": [
+    "apereo",
+    "uportal",
+    "content",
+    "menu",
+    "user-info"
+  ],
+  "main": "dist/js/eyebrow-user-info.js",
+  "dependencies": {
+    "@lit/localize": "^0.11.1",
+    "core-js": "^3.19.1",
+    "lit": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.0",
+    "@babel/plugin-proposal-decorators": "^7.16.4",
+    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-typescript": "^7.1.0",
+    "@lit/localize-tools": "^0.4.0",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "acorn": "^8.6.0",
+    "babel-loader": "^8.2.3",
+    "babel-polyfill": "^6.26.0",
+    "css-loader": "^6.5.1",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "html-minimizer-webpack-plugin": "^3.3.2",
+    "html-webpack-plugin": "^5.3.2",
+    "prettier": "^2.4.1",
+    "sass": "^1.42.1",
+    "sass-loader": "^12.3.0",
+    "terser-webpack-plugin": "^5.2.5",
+    "ts-loader": "^9.2.6",
+    "typescript": "^4.5.2",
+    "typescript-lit-html-plugin": "^0.9.0",
+    "webpack": "^5.64.1",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.5.0"
+  },
+  "browserslist": [
+    ">1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "scripts": {
+    "start": "npm run lint && npm run _run",
+    "build": "npm run lint && npm run _build",
+    "lint": "eslint . --ext .ts",
+    "extractLocales": "lit-localize extract",
+    "buildLocales": "lit-localize build",
+    "_run": "webpack-dev-server --mode development",
+    "_dev": "webpack --mode development",
+    "_build": "webpack --mode production"
+  }
+}

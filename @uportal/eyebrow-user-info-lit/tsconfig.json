@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "baseUrl": "src",
+    "paths": {
+      "@helpers/*": ["helpers/*"],
+      "@styles/*": ["styles/*"],
+      "@locales/*": ["locales/*"]
+    },
+    "outDir": "./dist/",
+    "rootDir": "./",
+    "target": "es2015",
+    "module": "commonjs",
+    "lib": ["es2015", "dom"],
+    "sourceMap": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationMap": true,
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "plugins": [
+      {
+        "name": "ts-lit-plugin",
+        "strict": true
+      },
+      {
+        "name": "typescript-lit-html-plugin"
+      }
+    ]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", ".vscode"]
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+<file target-language="fr" source-language="en" original="lit-localize-inputs" datatype="plaintext">
+<body>
+<trans-unit id="s614783f36fef685f">
+  <source>Close account menu</source>
+  <target>Ouvrir le menu compte</target>
+</trans-unit>
+<trans-unit id="s62f1c5275951a27d">
+  <source>Open account menu</source>
+  <target>Fermer le menu compte</target>
+</trans-unit>
+<trans-unit id="sdfe2526362bc3224">
+  <source>avatar</source>
+</trans-unit>
+<trans-unit id="sf1ed7646f2755f57">
+  <source>See my account information</source>
+  <target>Voir les informations de mon compte</target>
+</trans-unit>
+<trans-unit id="s7cfe12cd14df9950">
+  <source>Sign out</source>
+  <target>Déconnexion</target>
+</trans-unit>
+</body>
+</file>
+</xliff>
