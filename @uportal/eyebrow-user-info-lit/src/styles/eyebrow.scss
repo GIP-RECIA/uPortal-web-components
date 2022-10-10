@@ -1,18 +1,6 @@
 $grey: #d0d0d0;
 
 .user-info {
-  /* used fonts and content : we need to add them for the build to be able to use it into shadow DOM and from parent html */
-  .fa {
-    display: inline-block;
-    font: normal normal normal 14px/1 FontAwesome, sans-serif;
-    font-size: inherit;
-    text-rendering: auto;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  .fa-sign-out::before {
-    content: '\f08b';
-  }
   > .dropdown {
     height: 100%;
     width: 100%;
@@ -90,7 +78,6 @@ $grey: #d0d0d0;
         }
       }
       > .sign-out {
-        display: flex;
         background-color: $grey;
         width: 100%;
         text-align: right;
@@ -98,10 +85,14 @@ $grey: #d0d0d0;
           background-color: darken($grey, 10%);
         }
         > a {
+          display: flex;
           padding-right: 15px;
           text-decoration: none;
           color: inherit;
           width: 100%;
+          align-content: center;
+          justify-content: end;
+          height: 32px;
           > * {
             line-height: 32px;
             vertical-align: top;
@@ -109,6 +100,10 @@ $grey: #d0d0d0;
           > span {
             text-transform: uppercase;
             margin-right: 5px;
+          }
+          .svg-inline--fa {
+            height: 15px;
+            margin: auto 15px auto 0px;
           }
         }
       }

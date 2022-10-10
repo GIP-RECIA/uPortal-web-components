@@ -3,9 +3,12 @@ import { html, LitElement, css, unsafeCSS, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { configureLocalization, msg, localized, str } from '@lit/localize';
 import scss from '@styles/eyebrow.scss';
 import langHelper from '@helpers/langHelper';
+import { library, icon } from '@fortawesome/fontawesome-svg-core';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 
 export const { setLocale } = configureLocalization({
   sourceLocale: 'en',
@@ -48,6 +51,7 @@ export class Eyebrow extends LitElement {
     const lang = langHelper.getPageLang(lhOpts);
     setLocale(lang);
     this.addEventListener('keyup', this.handleKeyPress);
+    library.add(faSignOutAlt);
   }
   firstUpdated(): void {
     this.shadowRoot
@@ -58,6 +62,7 @@ export class Eyebrow extends LitElement {
   }
 
   render(): TemplateResult {
+    const faSignOutIcon = `${icon(faSignOutAlt).html}`;
     return html`
       <div class="user-info">
         <div ref="dropdownMenu" class="dropdown">
@@ -133,7 +138,7 @@ export class Eyebrow extends LitElement {
                       tabindex="0"
                     >
                       <span>${msg(str`Sign out`)}</span>
-                      <i class="fa fa-sign-out" aria-hidden="true"></i>
+                      ${unsafeHTML(faSignOutIcon)}
                     </a>
                   </div>
                 `
