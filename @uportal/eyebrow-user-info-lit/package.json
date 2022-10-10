@@ -1,5 +1,5 @@
 {
-  "name": "@uportal/eyebrow-user-info",
+  "name": "@uportal/eyebrow-user-info-lit",
   "version": "1.37.0",
   "description": "Web component to display into eyebrow menu a user information menu with profile picture and more.",
   "license": "Apache-2.0",
