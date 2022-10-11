@@ -67,5 +67,9 @@
     "_run": "webpack-dev-server --mode development",
     "_dev": "webpack --mode development",
     "_build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GIP-RECIA/uPortal-web-components/tree/gip-recia-eyebrow-user-info-lit/%40uportal/eyebrow-user-info-lit"
   }
 }
