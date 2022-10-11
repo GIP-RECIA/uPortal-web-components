@@ -1,0 +1,74 @@
+:host {
+  /* Colors */
+  --ext-header-tpl-primary-color: #25b2f3;
+  --ext-header-tpl-bg-color: var(--ext-header-tpl-primary-color);
+  /* spaces */
+  --ext-header-tpl-spaces: 8px;
+  /* Text */
+  --ext-header-tpl-font-family: 'Roboto Condensed', 'Roboto', sans-serif;
+  --ext-header-tpl-font-size: 18px;
+  --ext-header-tpl-font-color: #ffffff;
+  /* Icon */
+  --ext-header-tpl-icon-opacity: 0.6;
+}
+
+#extended-uportal-header-container {
+  display: flex;
+  line-height: auto;
+  white-space: nowrap;
+  font-family: var(--ext-header-tpl-font-family);
+  font-size: var(--ext-header-tpl-font-size);
+  color: var(--ext-header-tpl-font-color);
+  background-color: var(--ext-header-tpl-bg-color);
+  > div {
+    display: flex;
+    flex: 1;
+    margin: auto 5px;
+  }
+  #extended-uportal-header-menu,
+  #extended-uportal-header-org {
+    flex: 0 1 fit-content;
+    justify-content: left;
+  }
+
+  #extended-uportal-header-org {
+    align-items: center;
+    overflow: hidden;
+    a.org-logo {
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-left: 0;
+      margin-right: 5px;
+
+      img {
+        display: block;
+        opacity: var(--ext-header-tpl-icon-opacity);
+      }
+    }
+    p.org-display-name {
+      margin: 0;
+      color: var(--ext-header-tpl-font-color);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      span.service-name {
+        @media screen and (max-width: 768px) {
+          display: none;
+        }
+      }
+    }
+  }
+  #extended-uportal-header-user {
+    flex: 1;
+    justify-content: right;
+    align-content: center;
+    & eyebrow-user-info {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-left: var(--ext-header-tpl-spaces);
+      margin-right: var(--ext-header-tpl-spaces);
+    }
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+}

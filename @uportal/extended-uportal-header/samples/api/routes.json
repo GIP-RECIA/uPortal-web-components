@@ -1,0 +1,7 @@
+{
+  "/uPortal/api/v4-3/dlm/layout.json": "/layout",
+  "/change-etablissement/rest/v2/structures/structs/": "/orginfo",
+  "/uPortal/api/v4-3/dlm/portletRegistry.json": "/portletRegistry",
+  "/uPortal/api/v5-1/userinfo": "/userinfo",
+  "/commun/portal_template_api.tpl.json": "/portal_template"
+}

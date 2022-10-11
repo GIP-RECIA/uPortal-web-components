@@ -1,0 +1,5 @@
+{
+  "host": "api.server2.local",
+  "port": 3000,
+  "routes": "./samples/api/routes.json"
+}
