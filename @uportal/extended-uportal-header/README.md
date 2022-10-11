@@ -1,16 +1,5 @@
 # extended-uportal-header
 
-## TODO :
-
-- [x] Changer le nom du composant
-- [x] Remplacer la partie multi-domain par un slot
-- [x] Rendre le chargement du template optionnel
-- [x] Ajouter le chargement du template par un json
-- [x] Ecrire la documentation
-- [ ] Prendre en compte les evos [Evos content menu](https://github.com/orgs/GIP-RECIA/projects/7#card-78698597)
-- [ ] Tester
-- [ ] Intégrer dans le dépot
-
 ## Installation
 
 ```
