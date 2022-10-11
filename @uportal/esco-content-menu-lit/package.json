@@ -91,5 +91,9 @@
     "_lint": "eslint . --ext .ts",
     "extractLocales": "lit-localize extract",
     "buildLocales": "lit-localize build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GIP-RECIA/uPortal-web-components/tree/gip-recia-esco-content-menu-lit/%40uportal/esco-content-menu-lit"
   }
 }
