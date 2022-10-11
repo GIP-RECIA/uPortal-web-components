@@ -69,5 +69,18 @@
     "_lint": "eslint . --ext .ts",
     "extractLocales": "lit-localize extract",
     "buildLocales": "lit-localize build"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GIP-RECIA/uPortal-web-components/tree/feat-extended-uportal-header/%40uportal/extended-uportal-header"
+  },
+  "keywords": [
+    "apereo",
+    "uportal",
+    "content",
+    "menu",
+    "navigation",
+    "header"
+  ],
+  "license": "Apache-2.0"
 }
