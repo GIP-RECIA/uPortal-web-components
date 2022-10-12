@@ -208,7 +208,7 @@ export class ExtendedUportalHeader extends LitElement {
       ? this.forceOrgLogoUrl
       : this.forceOrgLogoPath != ''
       ? this._makeUrl(this.forceOrgLogoPath)
-      : defaultOrgImage;
+      : false;
   }
 
   private _picture() {
@@ -251,7 +251,7 @@ export class ExtendedUportalHeader extends LitElement {
                   favorites-portlet-card-size="${this.favoritesPortletCardSize}"
                   grid-portlet-card-size="${this.gridPortletCardSize}"
                   default-org-logo="${this._defaultOrgLogo()}"
-                  force-org-logo="${this._forceOrgLogo()}"
+                  ?force-org-logo="${this._forceOrgLogo()}"
                   context-api-url="${this.contextApiUrl}"
                   favorite-api-url="${this._makeUrl(this.favoriteApiUrl)}"
                   layout-api-url="${this._makeUrl(this.layoutApiUrl)}"
