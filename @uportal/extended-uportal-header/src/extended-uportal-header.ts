@@ -1,3 +1,5 @@
+/** runtime */
+import 'regenerator-runtime';
 /** Lit */
 import {
   html,
@@ -97,13 +99,7 @@ export class ExtendedUportalHeader extends LitElement {
   templateApiUrl = '';
   @property({ type: String, attribute: 'template-api-path' })
   templateApiPath = process.env.APP_TPL_API_PATH ?? '';
-  @property({
-    type: Object,
-    hasChanged(newVal: string) {
-      console.log('template datas : ', newVal);
-      return true;
-    },
-  })
+  @property({ type: Object })
   template: template | null = null;
   @property({ type: String, attribute: 'sign-out-url' })
   signoutUrl = process.env.APP_LOGOUT_URL ?? '';
@@ -149,7 +145,6 @@ export class ExtendedUportalHeader extends LitElement {
       defaultLanguage: 'en',
     };
     const lang = langHelper.getPageLang(lhOpts);
-    console.log('LANG : ', lang);
     setLocale(lang);
     langHelper.setLocale(lang);
   }
@@ -169,7 +164,6 @@ export class ExtendedUportalHeader extends LitElement {
       }
     }
     if (this.template === null) {
-      console.log('get template');
       this._getTemplate();
     }
   }
