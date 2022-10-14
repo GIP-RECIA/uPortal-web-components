@@ -1,12 +1,12 @@
 {
   "name": "@gip-recia/extended-uportal-header",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "a component to deport the uPortal menu",
   "author": "Gregory Brousse <pro@gregory-brousse.fr>",
   "main": "dist/js/extended-uportal-header.js",
   "dependencies": {
     "@babel/runtime": "^7.18.6",
-    "@gip-recia/esco-content-menu-lit": "^0.1.5",
+    "@gip-recia/esco-content-menu-lit": "^0.1.6",
     "@gip-recia/eyebrow-user-info-lit": "^0.1.0",
     "core-js": "^3.25.1",
     "lit": "^2.0.2",
