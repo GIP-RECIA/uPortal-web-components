@@ -125,6 +125,16 @@ export class ExtendedUportalHeader extends LitElement {
   showFavoritesInSlider = false;
   @property({ type: String, attribute: 'icon-type' })
   iconType = 'hamburger';
+  @property({
+    type: String,
+    attribute: 'return-home-target',
+    hasChanged(newVal: string) {
+      return ['_self', '_blank'].includes(newVal);
+    },
+  })
+  returnHomeTarget = '_self';
+  @property({ type: String, attribute: 'return-home-title' })
+  returnHomeTitle: string | null = null;
   @property({ type: Boolean })
   debug = false;
 
@@ -281,8 +291,9 @@ export class ExtendedUportalHeader extends LitElement {
                 <a
                   class="org-logo"
                   href="${this._makeUrl(this.portailPath)}"
-                  target="_blank"
-                  title="${this.template?.name ??
+                  target="${this.returnHomeTarget}"
+                  title="${this.returnHomeTitle ??
+                  this.template?.name ??
                   langHelper.localTranslation(
                     'message.header.gotoportal',
                     msg('go to the portal')
