@@ -50,9 +50,21 @@ export class Eyebrow extends LitElement {
     };
     const lang = langHelper.getPageLang(lhOpts);
     setLocale(lang);
-    this.addEventListener('keyup', this.handleKeyPress);
     library.add(faSignOutAlt);
   }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('keyup', this.handleKeyPress.bind(this));
+    window.addEventListener('click', this.handleClick.bind(this));
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener('keyup', this.handleKeyPress.bind(this));
+    window.removeEventListener('click', this.handleClick.bind(this));
+  }
+
   firstUpdated(): void {
     this.shadowRoot
       ?.getElementById('dropdown-content')
@@ -156,6 +168,13 @@ export class Eyebrow extends LitElement {
     e.preventDefault();
     if (this.visible && e.key === 'Escape') {
       this.visible = false;
+    }
+  }
+  handleClick(e: Event): void {
+    if (e.target instanceof HTMLElement) {
+      if (!this.contains(e.target)) {
+        this.visible = false;
+      }
     }
   }
 
