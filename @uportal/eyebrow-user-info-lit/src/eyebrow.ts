@@ -172,7 +172,7 @@ export class Eyebrow extends LitElement {
   }
   handleClick(e: Event): void {
     if (e.target instanceof HTMLElement) {
-      if (!this.contains(e.target)) {
+      if (this.visible && !this.contains(e.target)) {
         this.visible = false;
       }
     }
