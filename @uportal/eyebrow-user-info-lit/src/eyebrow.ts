@@ -162,6 +162,7 @@ export class Eyebrow extends LitElement {
   }
   toggleDropdown(e: Event): void {
     e.preventDefault();
+    e.stopPropagation();
     this.visible = !this.visible;
   }
   handleKeyPress(e: KeyboardEvent): void {
