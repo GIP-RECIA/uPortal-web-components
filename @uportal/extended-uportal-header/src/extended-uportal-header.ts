@@ -123,7 +123,23 @@ export class ExtendedUportalHeader extends LitElement {
   hideActionMode = 'auto';
   @property({ type: Boolean, attribute: 'show-favorites-in-slider' })
   showFavoritesInSlider = false;
-  @property({ type: String, attribute: 'icon-type' })
+  @property({
+    type: String,
+    hasChanged(newVal: string) {
+      return [
+        'hamburger',
+        'four-square',
+        'four-empty-square',
+        'nine-square',
+        'nine-empty-square',
+        'four-circle',
+        'four-empty-circle',
+        'nine-circle',
+        'nine-empty-circle',
+      ].includes(newVal);
+    },
+    attribute: 'icon-type',
+  })
   iconType = 'hamburger';
   @property({
     type: String,
@@ -279,10 +295,10 @@ export class ExtendedUportalHeader extends LitElement {
                   user-all-orgs-id-attribute-name="${this
                     .userAllOrgsIdAttributeName}"
                   hide-action-mode="${this.hideActionMode}"
-                  ?show-favorites-in-slider=${this.showFavoritesInSlider}
-                  ?debug=${this.debug}
+                  show-favorites-in-slider=${this.showFavoritesInSlider}
+                  icon-type=${this.iconType}
+                  debug=${this.debug}
                 >
-                  ${this._renderIcon()}
                 </esco-hamburger-menu>
               </slot>
             </div>
@@ -350,85 +366,6 @@ export class ExtendedUportalHeader extends LitElement {
         this.template.iconOpacity.toString()
       );
     }
-  }
-
-  private _renderIcon() {
-    const classes = {
-      'menu-icon': true,
-      'four-square-icon': false,
-      'nine-square-icon': false,
-      'empty-icon': false,
-    };
-    let elNumber = 4;
-    switch (this.iconType) {
-      case 'four-empty-square':
-        classes['empty-icon'] = true;
-      // eslint-disable-next-line no-fallthrough
-      case 'four-square':
-        classes['four-square-icon'] = true;
-        elNumber = 4;
-        break;
-      case 'nine-empty-square':
-        classes['empty-icon'] = true;
-      // eslint-disable-next-line no-fallthrough
-      case 'nine-square':
-        classes['nine-square-icon'] = true;
-        elNumber = 9;
-        break;
-      case 'custom':
-        return html`<slot name="menu-icon" slot="menu-icon"></slot>`;
-        break;
-      default:
-        return html``;
-    }
-    return html`
-      <div slot="menu-icon">
-        <div class="${classMap(classes)}">
-          ${[...Array(elNumber)].map(
-            (element, index) =>
-              html`<div id="icon-elem-${index}" class="icon-elem"></div>`
-          )}
-        </div>
-        <style>
-          .menu-icon {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-items: center;
-            width: 28px;
-            height: 28px;
-            margin: 0 var(--ext-header-tpl-spaces);
-          }
-
-          .four-square-icon .icon-elem {
-            flex: 0 1 10px;
-            width: 10px;
-            height: 10px;
-            margin: 2px;
-            content: ' ';
-            background-color: var(--ext-header-tpl-font-color);
-            border-radius: 1px;
-          }
-
-          .nine-square-icon .icon-elem {
-            flex: 0 1 6px;
-            width: 6px;
-            height: 6px;
-            margin: 1.6px;
-            content: ' ';
-            background-color: var(--ext-header-tpl-font-color);
-            border-radius: 1px;
-          }
-
-          .menu-icon.empty-icon .icon-elem {
-            box-sizing: border-box;
-            background-color: transparent;
-            border: 1.5px solid var(--ext-header-tpl-font-color);
-            border-radius: 1px;
-          }
-        </style>
-      </div>
-    `;
   }
 
   static styles = css`
