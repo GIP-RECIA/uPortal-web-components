@@ -182,19 +182,13 @@ export class ExtendedUportalHeader extends LitElement {
     if (_changedProperties.has('messages')) {
       langHelper.setReference(this.messages);
     }
-    if (this._userInfos === null) {
-      this._getUserInfos();
-    } else if (this._orgInfos === null) {
-      if (this._userInfos?.orgId) {
-        this._getOrgInfos(this._userInfos.orgId);
-      }
-    }
-    if (this.template === null) {
-      this._getTemplate();
-    }
+    this._getUserInfos();
+    if (this._userInfos?.orgId) this._getOrgInfos(this._userInfos.orgId);
+    this._getTemplate();
   }
 
   private async _getUserInfos() {
+    if (this._userInfos !== null) return;
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
@@ -204,6 +198,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private async _getOrgInfos(orgId: string) {
+    if (this._orgInfos !== null) return;
     this._orgInfos = await orgInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.organizationApiUrl),
@@ -213,6 +208,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private async _getTemplate() {
+    if (this.template !== null) return;
     this.template = await templateService.get(this._tplApiUrl(), this.domain);
   }
 
@@ -295,9 +291,9 @@ export class ExtendedUportalHeader extends LitElement {
                   user-all-orgs-id-attribute-name="${this
                     .userAllOrgsIdAttributeName}"
                   hide-action-mode="${this.hideActionMode}"
-                  show-favorites-in-slider=${this.showFavoritesInSlider}
+                  ?show-favorites-in-slider=${this.showFavoritesInSlider}
                   icon-type=${this.iconType}
-                  debug=${this.debug}
+                  ?debug=${this.debug}
                 >
                 </esco-hamburger-menu>
               </slot>
