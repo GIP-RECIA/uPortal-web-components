@@ -58,8 +58,7 @@ export default class userInfoService {
           email: userInfoFetch?.decoded?.email,
           orgId: get(userInfoFetch?.decoded, orgIdAttribute) as string,
         };
-
-        if (user.displayName && user.email) return user;
+        if (user.displayName && user.orgId) return user;
       }
     } catch (err) {
       // eslint-disable-next-line
