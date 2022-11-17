@@ -285,8 +285,7 @@ export class ExtendedUportalHeader extends LitElement {
                   sign-out-url="${this.signoutUrl}"
                   user-info-portlet-url="${this.userInfoPortletUrl}"
                   switch-org-portlet-url="${this.switchOrgPortletUrl}"
-                  user-org-id-attribute-name="${this
-                    .userAllOrgsIdAttributeName}"
+                  user-org-id-attribute-name="${this.orgAttributeName}"
                   org-logo-url-attribute-name="${this.orgLogoUrlAttributeName}"
                   user-all-orgs-id-attribute-name="${this
                     .userAllOrgsIdAttributeName}"
