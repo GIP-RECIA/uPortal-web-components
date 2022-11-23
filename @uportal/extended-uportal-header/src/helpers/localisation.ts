@@ -2,5 +2,6 @@ import { configureLocalization } from '@lit/localize';
 export const { setLocale } = configureLocalization({
   sourceLocale: 'en',
   targetLocales: ['fr'],
-  loadLocale: (locale) => import(`@locales/${locale}.ts`),
+  loadLocale: async (locale) =>
+    await import(/* webpackMode: "eager" */ '../locales/fr'),
 });
