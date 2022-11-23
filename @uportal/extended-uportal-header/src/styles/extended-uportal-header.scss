@@ -20,6 +20,11 @@
   font-size: var(--ext-header-tpl-font-size);
   color: var(--ext-header-tpl-font-color);
   background-color: var(--ext-header-tpl-bg-color);
+  a:any-link {
+    font-family: var(--ext-header-tpl-font-family);
+    font-size: var(--ext-header-tpl-font-size);
+    color: var(--ext-header-tpl-font-color);
+  }
   > div {
     display: flex;
     flex: 1;
@@ -66,6 +71,22 @@
       margin-bottom: auto;
       margin-left: var(--ext-header-tpl-spaces);
       margin-right: var(--ext-header-tpl-spaces);
+    }
+    a.login-button {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      &:visited {
+        color: var(--ext-header-tpl-font-color);
+      }
+      .sign-in-icon {
+        height: var(--ext-header-tpl-font-size);
+        margin-right: 5px;
+        svg {
+          max-height: var(--ext-header-tpl-font-size);
+          width: 100%;
+        }
+      }
     }
     @media screen and (max-width: 768px) {
       display: none;
