@@ -10,9 +10,10 @@ import {
   AttributePart,
   PropertyValueMap,
 } from 'lit';
+import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { msg, localized, str } from '@lit/localize';
+import { msg, str, updateWhenLocaleChanges } from '@lit/localize';
 /** Helpers */
 import sizeHelper from '@helpers/sizeHelper';
 import { setLocale } from '@helpers/localisation';
@@ -30,8 +31,12 @@ import scss from '@styles/extended-uportal-header.scss';
 import defaultOrgIcon from '@images/default-org.icon.png';
 import defaultOrgImage from '@images/default-org.png';
 import defaultAvatar from '@images/default-avatar.svg';
+/** Icons */
+import { icon } from '@fortawesome/fontawesome-svg-core';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
 
 @customElement('extended-uportal-header')
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class ExtendedUportalHeader extends LitElement {
   @property({ type: Object })
   messages = [];
@@ -103,6 +108,8 @@ export class ExtendedUportalHeader extends LitElement {
   template: template | null = null;
   @property({ type: String, attribute: 'sign-out-url' })
   signoutUrl = process.env.APP_LOGOUT_URL ?? '';
+  @property({ type: String, attribute: 'sign-in-url' })
+  signInUrl = '';
   @property({ type: String, attribute: 'user-info-portlet-url' })
   userInfoPortletUrl = '';
   @property({ type: String, attribute: 'switch-org-portlet-url' })
@@ -173,6 +180,7 @@ export class ExtendedUportalHeader extends LitElement {
     const lang = langHelper.getPageLang(lhOpts);
     setLocale(lang);
     langHelper.setLocale(lang);
+    updateWhenLocaleChanges(this);
   }
 
   protected willUpdate(
@@ -263,40 +271,11 @@ export class ExtendedUportalHeader extends LitElement {
 
   render(): TemplateResult {
     this._preRender();
-    return this._userInfos && this._orgInfos
+    return (this._userInfos && this._orgInfos) ||
+      (this.signInUrl !== '' && this.template)
       ? html`
           <div id="extended-uportal-header-container">
-            <div id="extended-uportal-header-menu">
-              <slot name="menu">
-                <esco-hamburger-menu
-                  .messages=${this.messages}
-                  favorites-portlet-card-size="${this.favoritesPortletCardSize}"
-                  grid-portlet-card-size="${this.gridPortletCardSize}"
-                  default-org-logo="${this._defaultOrgLogo()}"
-                  ?force-org-logo="${this._forceOrgLogo()}"
-                  context-api-url="${this.contextApiUrl}"
-                  favorite-api-url="${this._makeUrl(this.favoriteApiUrl)}"
-                  layout-api-url="${this._makeUrl(this.layoutApiUrl)}"
-                  portlet-api-url="${this._makeUrl(this.portletApiUrl)}"
-                  organization-api-url="${this._makeUrl(
-                    this.organizationApiUrl
-                  )}"
-                  user-info-api-url="${this._makeUrl(this.userInfoApiUrl)}"
-                  sign-out-url="${this.signoutUrl}"
-                  user-info-portlet-url="${this.userInfoPortletUrl}"
-                  switch-org-portlet-url="${this.switchOrgPortletUrl}"
-                  user-org-id-attribute-name="${this.orgAttributeName}"
-                  org-logo-url-attribute-name="${this.orgLogoUrlAttributeName}"
-                  user-all-orgs-id-attribute-name="${this
-                    .userAllOrgsIdAttributeName}"
-                  hide-action-mode="${this.hideActionMode}"
-                  ?show-favorites-in-slider=${this.showFavoritesInSlider}
-                  icon-type=${this.iconType}
-                  ?debug=${this.debug}
-                >
-                </esco-hamburger-menu>
-              </slot>
-            </div>
+            ${this._renderMenu()}
             <div id="extended-uportal-header-org">
               <slot name="brand">
                 <a
@@ -307,7 +286,7 @@ export class ExtendedUportalHeader extends LitElement {
                   this.template?.name ??
                   langHelper.localTranslation(
                     'message.header.gotoportal',
-                    msg('go to the portal')
+                    msg(str`go to the portal`)
                   )}"
                 >
                   <img
@@ -316,7 +295,7 @@ export class ExtendedUportalHeader extends LitElement {
                     alt="${this.template?.name ??
                     langHelper.localTranslation(
                       'message.header.icon',
-                      msg('portal icon')
+                      msg(str`portal icon`)
                     )}"
                   />
                 </a>
@@ -330,19 +309,7 @@ export class ExtendedUportalHeader extends LitElement {
                 </p>
               </slot>
             </div>
-            <div id="extended-uportal-header-user">
-              <slot name="user">
-                <eyebrow-user-info
-                  :menu-is-dark="false"
-                  display-name="${this._userInfos.displayName}"
-                  picture="${this._picture()}"
-                  email="${this._userInfos.email}"
-                  logout-link="${this.signoutUrl}"
-                  more-link="${this.userInfoPortletUrl}"
-                  avatar-size="28px"
-                ></eyebrow-user-info>
-              </slot>
-            </div>
+            ${this._renderUser()}
           </div>
         `
       : html` <slot name="not-loaded"></slot> `;
@@ -361,6 +328,77 @@ export class ExtendedUportalHeader extends LitElement {
         this.template.iconOpacity.toString()
       );
     }
+  }
+
+  private _renderMenu() {
+    return this._userInfos && this._orgInfos
+      ? html` <div id="extended-uportal-header-menu">
+          <slot name="menu">
+            <esco-hamburger-menu
+              .messages=${this.messages}
+              favorites-portlet-card-size="${this.favoritesPortletCardSize}"
+              grid-portlet-card-size="${this.gridPortletCardSize}"
+              default-org-logo="${this._defaultOrgLogo()}"
+              ?force-org-logo="${this._forceOrgLogo()}"
+              context-api-url="${this.contextApiUrl}"
+              favorite-api-url="${this._makeUrl(this.favoriteApiUrl)}"
+              layout-api-url="${this._makeUrl(this.layoutApiUrl)}"
+              portlet-api-url="${this._makeUrl(this.portletApiUrl)}"
+              organization-api-url="${this._makeUrl(this.organizationApiUrl)}"
+              user-info-api-url="${this._makeUrl(this.userInfoApiUrl)}"
+              sign-out-url="${this.signoutUrl}"
+              user-info-portlet-url="${this.userInfoPortletUrl}"
+              switch-org-portlet-url="${this.switchOrgPortletUrl}"
+              user-org-id-attribute-name="${this.orgAttributeName}"
+              org-logo-url-attribute-name="${this.orgLogoUrlAttributeName}"
+              user-all-orgs-id-attribute-name="${this
+                .userAllOrgsIdAttributeName}"
+              hide-action-mode="${this.hideActionMode}"
+              ?show-favorites-in-slider=${this.showFavoritesInSlider}
+              icon-type=${this.iconType}
+              ?debug=${this.debug}
+            >
+            </esco-hamburger-menu>
+          </slot>
+        </div>`
+      : html``;
+  }
+
+  private _renderUser() {
+    const signInIcon = `${icon(faRightToBracket).html}`;
+    return this._userInfos && this._orgInfos
+      ? html`<div id="extended-uportal-header-user">
+          <slot name="user">
+            <eyebrow-user-info
+              :menu-is-dark="false"
+              display-name="${this._userInfos.displayName}"
+              picture="${this._picture()}"
+              email="${this._userInfos.email}"
+              logout-link="${this.signoutUrl}"
+              more-link="${this.userInfoPortletUrl}"
+              avatar-size="28px"
+            ></eyebrow-user-info>
+          </slot>
+        </div>`
+      : html`<div id="extended-uportal-header-user">
+          <slot name="login">
+            <a
+              href="${this.signInUrl}"
+              target="_self"
+              class="login-button"
+              title="${langHelper.localTranslation(
+                'message.header.login',
+                msg(str`login`)
+              )}"
+            >
+              <span class="sign-in-icon">${unsafeHTML(signInIcon)}</span>
+              ${langHelper.localTranslation(
+                'message.header.login',
+                msg(str`login`)
+              )}
+            </a>
+          </slot>
+        </div>`;
   }
 
   static styles = css`
