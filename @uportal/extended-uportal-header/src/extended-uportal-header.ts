@@ -13,6 +13,7 @@ import {
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
 import { msg, str, updateWhenLocaleChanges } from '@lit/localize';
 /** Helpers */
 import sizeHelper from '@helpers/sizeHelper';
@@ -158,6 +159,8 @@ export class ExtendedUportalHeader extends LitElement {
   returnHomeTarget = '_self';
   @property({ type: String, attribute: 'return-home-title' })
   returnHomeTitle: string | null = null;
+  @property({ type: String })
+  height = 'auto';
   @property({ type: Boolean })
   debug = false;
 
@@ -327,6 +330,9 @@ export class ExtendedUportalHeader extends LitElement {
         '--ext-header-tpl-icon-opacity',
         this.template.iconOpacity.toString()
       );
+    }
+    if (this.height !== 'auto') {
+      this.style.setProperty('--ext-header-tpl-height', this.height);
     }
   }
 

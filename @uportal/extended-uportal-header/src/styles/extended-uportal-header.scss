@@ -1,5 +1,7 @@
 :host {
   /* Colors */
+  --ext-header-tpl-height: auto;
+  /* Colors */
   --ext-header-tpl-primary-color: #25b2f3;
   --ext-header-tpl-bg-color: var(--ext-header-tpl-primary-color);
   /* spaces */
@@ -14,6 +16,7 @@
 
 #extended-uportal-header-container {
   display: flex;
+  height: var(--ext-header-tpl-height);
   line-height: auto;
   white-space: nowrap;
   font-family: var(--ext-header-tpl-font-family);
