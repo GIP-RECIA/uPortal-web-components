@@ -23,6 +23,9 @@ import langHelper from '@helpers/langHelper';
 import userInfoService, { userInfo } from '@services/userInfoService';
 import orgInfoService, { orgInfo } from '@services/orgInfoService';
 import templateService, { template } from '@services/templateService';
+import sessionService from '@services/sessionService';
+/** Libraries */
+import { round } from 'lodash';
 /** Components */
 import '@gip-recia/eyebrow-user-info-lit';
 import '@gip-recia/esco-content-menu-lit';
@@ -101,6 +104,10 @@ export class ExtendedUportalHeader extends LitElement {
   userInfoApiUrl =
     (process.env.APP_PORTAL_CONTEXT ?? '') +
     (process.env.APP_USER_INFO_URI ?? '');
+  @property({ type: String, attribute: 'session-api-url' })
+  sessionApiUrl =
+    (process.env.APP_PORTAL_CONTEXT ?? '') +
+    (process.env.APP_SESSION_URI ?? '');
   @property({ type: String, attribute: 'template-api-url' })
   templateApiUrl = '';
   @property({ type: String, attribute: 'template-api-path' })
@@ -161,6 +168,8 @@ export class ExtendedUportalHeader extends LitElement {
   returnHomeTitle: string | null = null;
   @property({ type: String })
   height = 'auto';
+  @property({ type: Boolean, attribute: 'disable-session-renew' })
+  sessionRenewDisable = false;
   @property({ type: Boolean })
   debug = false;
 
@@ -193,9 +202,20 @@ export class ExtendedUportalHeader extends LitElement {
     if (_changedProperties.has('messages')) {
       langHelper.setReference(this.messages);
     }
+    if (_changedProperties.has('sessionApiUrl')) {
+      this._renewSession();
+    }
     this._getUserInfos();
     if (this._userInfos?.orgId) this._getOrgInfos(this._userInfos.orgId);
     this._getTemplate();
+  }
+
+  private async _renewSession() {
+    if (this.sessionRenewDisable) return;
+    const timeout = await sessionService.get(this._makeUrl(this.sessionApiUrl));
+    if (timeout !== null) {
+      setTimeout(this._renewSession.bind(this), round(timeout / 2));
+    }
   }
 
   private async _getUserInfos() {
