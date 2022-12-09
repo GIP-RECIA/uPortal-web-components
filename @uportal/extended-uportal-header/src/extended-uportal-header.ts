@@ -25,7 +25,8 @@ import orgInfoService, { orgInfo } from '@services/orgInfoService';
 import templateService, { template } from '@services/templateService';
 import sessionService from '@services/sessionService';
 /** Libraries */
-import { round } from 'lodash';
+import round from 'lodash/round';
+import debounce from 'lodash/debounce';
 /** Components */
 import '@gip-recia/eyebrow-user-info-lit';
 import '@gip-recia/esco-content-menu-lit';
@@ -200,7 +201,13 @@ export class ExtendedUportalHeader extends LitElement {
     updateWhenLocaleChanges(this);
   }
 
-  protected shouldUpdate(): boolean {
+  protected shouldUpdate(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): boolean {
+    if (_changedProperties.has('messages')) {
+      langHelper.setReference(this.messages);
+    }
     if (!this._loaded && this._userInfos == null) {
       this._loaded = true;
       this._getUserInfos();
@@ -209,21 +216,17 @@ export class ExtendedUportalHeader extends LitElement {
       this._getOrgInfos(this._userInfos.orgId);
       return false;
     }
+    this._getTemplate();
     return true;
   }
 
-  protected willUpdate(
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
-  ): void {
-    if (_changedProperties.has('messages')) {
-      langHelper.setReference(this.messages);
+  protected willUpdate(): void {
+    if (this._loaded && this._isConnected() && this._sessionTimer === null) {
+      this._debounceRenewSession();
     }
-    if (this._loaded && this._isConnected() && !this._sessionTimer) {
-      this._renewSession();
-    }
-    this._getTemplate();
   }
+
+  private _debounceRenewSession = debounce(this._renewSession.bind(this), 1000);
 
   private async _renewSession() {
     if (this.sessionRenewDisable) return;
@@ -315,7 +318,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _isConnected() {
-    return this._userInfos && this._orgInfos;
+    return this._userInfos !== null && this._orgInfos !== null;
   }
 
   render(): TemplateResult {
