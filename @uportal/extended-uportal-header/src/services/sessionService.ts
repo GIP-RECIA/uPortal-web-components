@@ -10,10 +10,9 @@ export default class sessionService {
       }
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const person: any = await response.json();
-
-      if (person && person.sessionKey && person.timeoutMS) {
-        return person.timeoutMS;
+      const datas: any = await response.json();
+      if (datas.person && datas.person.sessionKey && datas.person.timeoutMS) {
+        return datas.person.timeoutMS;
       }
       return 0;
     } catch (err) {
