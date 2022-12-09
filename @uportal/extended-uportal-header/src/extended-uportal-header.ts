@@ -7,15 +7,14 @@ import {
   css,
   unsafeCSS,
   TemplateResult,
-  AttributePart,
   PropertyValueMap,
 } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement, property, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
-import { styleMap } from 'lit/directives/style-map.js';
 import { msg, str, updateWhenLocaleChanges } from '@lit/localize';
 /** Helpers */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import sizeHelper from '@helpers/sizeHelper';
 import { setLocale } from '@helpers/localisation';
 import langHelper from '@helpers/langHelper';

@@ -1,4 +1,4 @@
-import openIdConnect, { JWT } from '@uportal/open-id-connect';
+import openIdConnect from '@uportal/open-id-connect';
 export interface orgInfo {
   displayName: string;
   logo?: string;

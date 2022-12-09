@@ -1,5 +1,3 @@
-import openIdConnect, { JWT } from '@uportal/open-id-connect';
-
 export default class sessionService {
   static async get(sessionApiUrl: string): Promise<number> {
     try {
