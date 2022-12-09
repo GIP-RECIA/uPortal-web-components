@@ -174,13 +174,11 @@ export class ExtendedUportalHeader extends LitElement {
   debug = false;
 
   @state()
+  private _loaded = false;
+
   private _userInfos: userInfo | null = null;
 
-  @state()
   private _orgInfos: orgInfo | null = null;
-
-  @state()
-  private _loaded = false;
 
   private _sessionTimer: ReturnType<typeof setTimeout> | null = null;
 
@@ -207,12 +205,8 @@ export class ExtendedUportalHeader extends LitElement {
     if (_changedProperties.has('messages')) {
       langHelper.setReference(this.messages);
     }
-    if (!this._loaded && this._userInfos == null) {
-      this._loaded = true;
-      this._getUserInfos();
-      return false;
-    } else if (this._orgInfos == null && this._userInfos?.orgId) {
-      this._getOrgInfos(this._userInfos.orgId);
+    if (!this._loaded) {
+      this._load();
       return false;
     }
     this._getTemplate();
@@ -220,7 +214,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   protected willUpdate(): void {
-    if (this._loaded && this._isConnected() && this._sessionTimer === null) {
+    if (this._isConnected() && this._sessionTimer === null) {
       this._debounceRenewSession();
     }
   }
@@ -241,25 +235,26 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _reload(): void {
-    this._userInfos = this._orgInfos = this._sessionTimer = null;
+    this._sessionTimer = null;
+    this._loaded = false;
   }
 
-  private async _getUserInfos() {
+  private async _load() {
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
       this.orgAttributeName,
       this.debug
     );
-  }
-
-  private async _getOrgInfos(orgId: string) {
-    this._orgInfos = await orgInfoService.get(
-      this._makeUrl(this.userInfoApiUrl),
-      this._makeUrl(this.organizationApiUrl),
-      orgId,
-      this.debug
-    );
+    if (this._userInfos?.orgId) {
+      this._orgInfos = await orgInfoService.get(
+        this._makeUrl(this.userInfoApiUrl),
+        this._makeUrl(this.organizationApiUrl),
+        this._userInfos.orgId,
+        this.debug
+      );
+    }
+    this._loaded = true;
   }
 
   private async _getTemplate() {
@@ -316,13 +311,13 @@ export class ExtendedUportalHeader extends LitElement {
       : '';
   }
 
-  private _isConnected() {
+  private _isConnected(): boolean {
     return this._userInfos !== null && this._orgInfos !== null;
   }
 
   render(): TemplateResult {
     this._preRender();
-    return this._loaded || (this.signInUrl !== '' && this.template)
+    return this._isConnected() || this.signInUrl !== ''
       ? html`
           <div id="extended-uportal-header-container">
             ${this._renderMenu()}
