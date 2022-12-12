@@ -1,10 +1,18 @@
 /* eslint-disable */
+const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const BundleAnalyzerPlugin =
   require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const PACKAGE = require('./package.json');
+
+const currentDate = new Date().toLocaleString('en-US');
+
+const banner = ()=>{
+  return `package : ${PACKAGE.name}\nversion : ${PACKAGE.version}\nauthor : ${PACKAGE.author}\nbuild time : ${currentDate}`
+}
 
 let config = {
   entry: {
@@ -73,7 +81,7 @@ let config = {
       }),
     ],
     sideEffects: true,
-  },
+  }
 };
 
 module.exports = (env, argv) => {
@@ -84,11 +92,19 @@ module.exports = (env, argv) => {
         filename: 'index.html',
         chunks: ['extended-uportal-header'],
         template: './samples/extended-uportal-header.html',
+      }),
+      new webpack.BannerPlugin({
+        banner: banner,
       })
     ];
   }
   if (argv.mode === 'production') {
-    config.plugins = [new Dotenv()];
+    config.plugins = [
+      new Dotenv(),
+      new webpack.BannerPlugin({
+        banner: banner,
+      })
+    ];
     if (env.profiling) {
       config.plugins.push(new BundleAnalyzerPlugin());
     }
