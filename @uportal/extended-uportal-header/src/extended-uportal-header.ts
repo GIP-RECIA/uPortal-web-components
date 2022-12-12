@@ -37,7 +37,7 @@ import defaultOrgImage from '@images/default-org.png';
 import defaultAvatar from '@images/default-avatar.svg';
 /** Icons */
 import { icon } from '@fortawesome/fontawesome-svg-core';
-import { faRightToBracket } from '@fortawesome/free-solid-svg-icons';
+import { faRightToBracket } from '@fortawesome/free-solid-svg-icons/faRightToBracket';
 
 @customElement('extended-uportal-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
