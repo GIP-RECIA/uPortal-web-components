@@ -15,11 +15,11 @@ export default class sessionService {
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const datas: any = await response.json();
-      if (datas.person && datas.person.sessionKey && datas.person.timeoutMS) {
+      if (datas.person) {
         return {
-          key: datas.person.sessionKey,
-          timeout: datas.person.timeoutMS,
-          isConnected: datas.person.sessionKey === null,
+          key: datas.person?.sessionKey,
+          timeout: datas.person?.timeoutMS,
+          isConnected: datas.person?.sessionKey !== null,
         };
       }
       return null;
