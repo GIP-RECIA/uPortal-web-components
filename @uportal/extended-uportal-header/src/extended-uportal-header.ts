@@ -252,6 +252,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _debounceLoad = debounce(this._load.bind(this), 500);
+  private _debounceLoadAfterAction = debounce(this._load.bind(this), 30000);
 
   private async _load() {
     this._userInfos = await userInfoService.get(
@@ -284,13 +285,11 @@ export class ExtendedUportalHeader extends LitElement {
         this._renewSession.bind(this),
         round(session.timeout / 2)
       );
+      if (this._isConnected() != !session.isConnected) {
+        this._debounceLoad();
+      }
     }
     this._userAction = false;
-  }
-
-  private _reload(): void {
-    this._sessionTimer = null;
-    this._loaded = false;
   }
 
   private async _getTemplate() {
@@ -301,6 +300,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _handleUserAction() {
     if (!this._userAction) this._userAction = true;
     if (this._sessionTimer === null) this._debounceRenewSession();
+    if (this.sessionRenewDisable) this._debounceLoadAfterAction();
   }
 
   private _makeUrl(path: string, domain = ''): string {
