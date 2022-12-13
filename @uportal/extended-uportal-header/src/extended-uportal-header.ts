@@ -177,9 +177,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _loaded = false;
 
   private _userInfos: userInfo | null = null;
-
   private _orgInfos: orgInfo | null = null;
-
   private _sessionTimer: ReturnType<typeof setTimeout> | null = null;
 
   constructor() {
@@ -223,13 +221,13 @@ export class ExtendedUportalHeader extends LitElement {
 
   private async _renewSession() {
     if (this.sessionRenewDisable) return;
-    const timeout = await sessionService.get(this._makeUrl(this.sessionApiUrl));
-    if (timeout > 0) {
+    const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
+    if (session !== null && session.key !== null) {
       this._sessionTimer = setTimeout(
         this._renewSession.bind(this),
-        round(timeout / 2)
+        round(session.timeout / 2)
       );
-    } else {
+    } else if (session && session.isConnected && this._isConnected()) {
       this._reload();
     }
   }
