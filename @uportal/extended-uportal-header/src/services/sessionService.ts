@@ -1,5 +1,11 @@
+export type sessionInfos = {
+  key: string;
+  timeout: number;
+  isConnected: boolean;
+};
+
 export default class sessionService {
-  static async get(sessionApiUrl: string): Promise<number> {
+  static async get(sessionApiUrl: string): Promise<sessionInfos | null> {
     try {
       const response = await fetch(sessionApiUrl);
 
@@ -10,14 +16,18 @@ export default class sessionService {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const datas: any = await response.json();
       if (datas.person && datas.person.sessionKey && datas.person.timeoutMS) {
-        return datas.person.timeoutMS;
+        return {
+          key: datas.person.sessionKey,
+          timeout: datas.person.timeoutMS,
+          isConnected: datas.person.sessionKey === null,
+        };
       }
-      return 0;
+      return null;
     } catch (err) {
       // eslint-disable-next-line
       console.error(err, sessionApiUrl);
-      return 0;
+      return null;
     }
-    return 0;
+    return null;
   }
 }
