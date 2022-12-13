@@ -18235,12 +18235,14 @@
       }
     ]
   },
-  "person": {
-    "sessionKey": "5hmxwx3c",
-    "displayName": "John Doe",
-    "timeoutMS": 30000,
-    "serverName": "bouleau.srv-ent.brgm.recia.net",
-    "userName": "Fxxxxxx",
-    "version": "5.12.0"
+  "session": {
+    "person": {
+      "sessionKey": "5hmxwx3c",
+      "displayName": "John Doe",
+      "timeoutMS": 30000,
+      "serverName": "bouleau.srv-ent.brgm.recia.net",
+      "userName": "Fxxxxxx",
+      "version": "5.12.0"
+    }
   }
 }
