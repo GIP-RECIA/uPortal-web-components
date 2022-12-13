@@ -203,39 +203,40 @@ export class ExtendedUportalHeader extends LitElement {
     if (_changedProperties.has('messages')) {
       langHelper.setReference(this.messages);
     }
+    if (
+      !this._loaded ||
+      _changedProperties.has('userInfoApiUrl') ||
+      _changedProperties.has('layoutApiUrl') ||
+      _changedProperties.has('organizationApiUrl')
+    ) {
+      this._debounceLoad();
+    }
+    if (
+      this.template === null ||
+      _changedProperties.has('template') ||
+      _changedProperties.has('templateApiUrl') ||
+      _changedProperties.has('templateApiPath')
+    ) {
+      this._getTemplate();
+    }
+    if (
+      _changedProperties.has('sessionRenewDisable') ||
+      _changedProperties.has('sessionApiUrl')
+    ) {
+      this._debounceRenewSession();
+    }
     if (!this._loaded) {
-      this._load();
       return false;
     }
     this._getTemplate();
     return true;
   }
 
-  protected willUpdate(): void {
-    if (this._isConnected() && this._sessionTimer === null) {
-      this._debounceRenewSession();
-    }
+  protected firstUpdated(): void {
+    this._debounceRenewSession();
   }
 
-  private _debounceRenewSession = debounce(this._renewSession.bind(this), 1000);
-
-  private async _renewSession() {
-    if (this.sessionRenewDisable) return;
-    const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
-    if (session !== null && session.key !== null) {
-      this._sessionTimer = setTimeout(
-        this._renewSession.bind(this),
-        round(session.timeout / 2)
-      );
-    } else if (session && session.isConnected && this._isConnected()) {
-      this._reload();
-    }
-  }
-
-  private _reload(): void {
-    this._sessionTimer = null;
-    this._loaded = false;
-  }
+  private _debounceLoad = debounce(this._load.bind(this), 500);
 
   private async _load() {
     this._userInfos = await userInfoService.get(
@@ -253,6 +254,24 @@ export class ExtendedUportalHeader extends LitElement {
       );
     }
     this._loaded = true;
+  }
+
+  private _debounceRenewSession = debounce(this._renewSession.bind(this), 1000);
+
+  private async _renewSession() {
+    if (this.sessionRenewDisable) return;
+    const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
+    if (session !== null && session.key !== null) {
+      this._sessionTimer = setTimeout(
+        this._renewSession.bind(this),
+        round(session.timeout / 2)
+      );
+    }
+  }
+
+  private _reload(): void {
+    this._sessionTimer = null;
+    this._loaded = false;
   }
 
   private async _getTemplate() {
