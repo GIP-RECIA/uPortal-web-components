@@ -24,7 +24,6 @@ import orgInfoService, { orgInfo } from '@services/orgInfoService';
 import templateService, { template } from '@services/templateService';
 import sessionService from '@services/sessionService';
 /** Libraries */
-import round from 'lodash/round';
 import debounce from 'lodash/debounce';
 /** Components */
 import '@gip-recia/eyebrow-user-info-lit';
@@ -178,8 +177,6 @@ export class ExtendedUportalHeader extends LitElement {
 
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
-  private _sessionTimer: ReturnType<typeof setTimeout> | null = null;
-  private _userAction = false;
 
   constructor() {
     super();
@@ -251,8 +248,8 @@ export class ExtendedUportalHeader extends LitElement {
     this._debounceRenewSession();
   }
 
-  private _debounceLoad = debounce(this._load.bind(this), 1000);
-  private _debounceLoadAfterAction = debounce(this._load.bind(this), 10000);
+  private _debounceLoad = debounce(this._load.bind(this), 500);
+  private _debounceLoadAfterAction = debounce(this._load.bind(this), 5000);
 
   private async _load() {
     const previusStatus = this._userInfos;
@@ -277,27 +274,20 @@ export class ExtendedUportalHeader extends LitElement {
     this._loaded = true;
   }
 
-  private _debounceRenewSession = debounce(this._renewSession.bind(this), 500);
+  private _debounceRenewSession = debounce(this._renewSession.bind(this), 3000);
 
   private async _renewSession() {
-    if (this.sessionRenewDisable || !this._userAction) {
-      this._sessionTimer = null;
+    if (this.sessionRenewDisable) {
+      this._debounceLoadAfterAction();
       return;
     }
     const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
-    if (session !== null && session.key !== null) {
-      this._sessionTimer = setTimeout(
-        this._renewSession.bind(this),
-        round(session.timeout / 2)
-      );
-      if (this._isConnected() != !session.isConnected) {
-        this._debounceLoad();
-      }
+    if (session !== null && this._isConnected() != session.isConnected) {
+      this._debounceLoad();
     }
-    this._userAction = false;
   }
 
-  private _debounceGetTemplate = debounce(this._getTemplate.bind(this), 1000);
+  private _debounceGetTemplate = debounce(this._getTemplate.bind(this), 500);
 
   private async _getTemplate() {
     if (this.template !== null) return;
@@ -305,9 +295,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _handleUserAction() {
-    if (!this._userAction) this._userAction = true;
-    if (this._sessionTimer === null) this._debounceRenewSession();
-    this._debounceLoadAfterAction();
+    this._debounceRenewSession();
   }
 
   private _makeUrl(path: string, domain = ''): string {
