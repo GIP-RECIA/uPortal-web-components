@@ -179,6 +179,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
   private _sessionTimer: ReturnType<typeof setTimeout> | null = null;
+  private _userAction = false;
 
   constructor() {
     super();
@@ -194,6 +195,20 @@ export class ExtendedUportalHeader extends LitElement {
     setLocale(lang);
     langHelper.setLocale(lang);
     updateWhenLocaleChanges(this);
+  }
+
+  connectedCallback(): void {
+    super.connectedCallback();
+    ['mousemove', 'click', 'keypress'].every((event) =>
+      document.addEventListener(event, this._handleUserAction.bind(this))
+    );
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    ['mousemove', 'click', 'keypress'].every((event) =>
+      document.removeEventListener(event, this._handleUserAction.bind(this))
+    );
   }
 
   protected shouldUpdate(
@@ -259,7 +274,10 @@ export class ExtendedUportalHeader extends LitElement {
   private _debounceRenewSession = debounce(this._renewSession.bind(this), 1000);
 
   private async _renewSession() {
-    if (this.sessionRenewDisable) return;
+    if (this.sessionRenewDisable || !this._userAction) {
+      this._sessionTimer = null;
+      return;
+    }
     const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
     if (session !== null && session.key !== null) {
       this._sessionTimer = setTimeout(
@@ -267,6 +285,7 @@ export class ExtendedUportalHeader extends LitElement {
         round(session.timeout / 2)
       );
     }
+    this._userAction = false;
   }
 
   private _reload(): void {
@@ -277,6 +296,11 @@ export class ExtendedUportalHeader extends LitElement {
   private async _getTemplate() {
     if (this.template !== null) return;
     this.template = await templateService.get(this._tplApiUrl(), this.domain);
+  }
+
+  private _handleUserAction() {
+    if (!this._userAction) this._userAction = true;
+    if (this._sessionTimer === null) this._debounceRenewSession();
   }
 
   private _makeUrl(path: string, domain = ''): string {
