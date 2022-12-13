@@ -174,7 +174,7 @@ export class ExtendedUportalHeader extends LitElement {
   debug = false;
 
   @state()
-  private _loaded = false;
+  private _loaded: number | boolean = false;
 
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
@@ -232,7 +232,7 @@ export class ExtendedUportalHeader extends LitElement {
       _changedProperties.has('templateApiUrl') ||
       _changedProperties.has('templateApiPath')
     ) {
-      this._getTemplate();
+      this._debounceGetTemplate();
     }
     if (
       _changedProperties.has('sessionRenewDisable') ||
@@ -251,10 +251,11 @@ export class ExtendedUportalHeader extends LitElement {
     this._debounceRenewSession();
   }
 
-  private _debounceLoad = debounce(this._load.bind(this), 500);
-  private _debounceLoadAfterAction = debounce(this._load.bind(this), 30000);
+  private _debounceLoad = debounce(this._load.bind(this), 1000);
+  private _debounceLoadAfterAction = debounce(this._load.bind(this), 10000);
 
   private async _load() {
+    const previusStatus = this._userInfos;
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
@@ -269,10 +270,14 @@ export class ExtendedUportalHeader extends LitElement {
         this.debug
       );
     }
+    if (previusStatus != this._userInfos) {
+      this._loaded = Date.now();
+      return;
+    }
     this._loaded = true;
   }
 
-  private _debounceRenewSession = debounce(this._renewSession.bind(this), 1000);
+  private _debounceRenewSession = debounce(this._renewSession.bind(this), 500);
 
   private async _renewSession() {
     if (this.sessionRenewDisable || !this._userAction) {
@@ -292,6 +297,8 @@ export class ExtendedUportalHeader extends LitElement {
     this._userAction = false;
   }
 
+  private _debounceGetTemplate = debounce(this._getTemplate.bind(this), 1000);
+
   private async _getTemplate() {
     if (this.template !== null) return;
     this.template = await templateService.get(this._tplApiUrl(), this.domain);
@@ -300,7 +307,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _handleUserAction() {
     if (!this._userAction) this._userAction = true;
     if (this._sessionTimer === null) this._debounceRenewSession();
-    if (this.sessionRenewDisable) this._debounceLoadAfterAction();
+    this._debounceLoadAfterAction();
   }
 
   private _makeUrl(path: string, domain = ''): string {
