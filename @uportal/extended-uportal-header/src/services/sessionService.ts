@@ -7,7 +7,12 @@ export type sessionInfos = {
 export default class sessionService {
   static async get(sessionApiUrl: string): Promise<sessionInfos | null> {
     try {
-      const response = await fetch(sessionApiUrl);
+      const options = {
+        method: 'GET',
+        credentials: 'include' as RequestCredentials,
+      };
+
+      const response = await fetch(sessionApiUrl, options);
 
       if (!response.ok) {
         throw new Error(response.statusText);
