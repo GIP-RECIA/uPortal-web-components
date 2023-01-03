@@ -420,16 +420,17 @@ export class ExtendedUportalHeader extends LitElement {
           <slot name="menu">
             <esco-hamburger-menu
               .messages=${this.messages}
+              portal-base-url="${this.domain}"
               favorites-portlet-card-size="${this.favoritesPortletCardSize}"
               grid-portlet-card-size="${this.gridPortletCardSize}"
               default-org-logo="${this._defaultOrgLogo()}"
               ?force-org-logo="${this._forceOrgLogo()}"
               context-api-url="${this.contextApiUrl}"
-              favorite-api-url="${this._makeUrl(this.favoriteApiUrl)}"
-              layout-api-url="${this._makeUrl(this.layoutApiUrl)}"
-              portlet-api-url="${this._makeUrl(this.portletApiUrl)}"
-              organization-api-url="${this._makeUrl(this.organizationApiUrl)}"
-              user-info-api-url="${this._makeUrl(this.userInfoApiUrl)}"
+              favorite-api-url="${this.favoriteApiUrl}"
+              layout-api-url="${this.layoutApiUrl}"
+              portlet-api-url="${this.portletApiUrl}"
+              organization-api-url="${this.organizationApiUrl}"
+              user-info-api-url="${this.userInfoApiUrl}"
               sign-out-url="${this.signoutUrl}"
               user-info-portlet-url="${this.userInfoPortletUrl}"
               switch-org-portlet-url="${this.switchOrgPortletUrl}"
