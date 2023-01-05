@@ -455,6 +455,7 @@ export class ExtendedUportalHeader extends LitElement {
       ? html`<div id="extended-uportal-header-user">
           <slot name="user">
             <eyebrow-user-info
+              portal-base-url="${this.domain}"
               :menu-is-dark="false"
               display-name="${this._userInfos.displayName}"
               picture="${this._picture()}"
