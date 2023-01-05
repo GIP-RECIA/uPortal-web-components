@@ -7,6 +7,7 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 import { configureLocalization, msg, localized, str } from '@lit/localize';
 import scss from '@styles/eyebrow.scss';
 import langHelper from '@helpers/langHelper';
+import pathHelper from '@helpers/pathHelper';
 import { library, icon } from '@fortawesome/fontawesome-svg-core';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
 
@@ -20,6 +21,8 @@ export const { setLocale } = configureLocalization({
 @localized()
 @customElement('eyebrow-user-info')
 export class Eyebrow extends LitElement {
+  @property({ type: String, attribute: 'portal-base-url' })
+  portalBaseUrl = '';
   @property({ type: String, attribute: 'display-name' })
   displayName = 'Unknown';
   @property({ type: String })
@@ -120,15 +123,30 @@ export class Eyebrow extends LitElement {
                   ? html`
                       <a
                         id="more-link"
-                        href="${this.moreLink}"
+                        href="${pathHelper.getUrl(
+                          this.moreLink,
+                          this.portalBaseUrl
+                        )}"
                         title="${msg(str`See my account information`)}"
                         tabindex="0"
                       >
-                        <img src="${this.picture}" alt="${msg(str`avatar`)}" />
+                        <img
+                          src="${pathHelper.getUrl(
+                            this.picture,
+                            this.portalBaseUrl
+                          )}"
+                          alt="${msg(str`avatar`)}"
+                        />
                       </a>
                     `
                   : html`
-                      <img src="${this.picture}" alt="${msg(str`avatar`)}" />
+                      <img
+                        src="${pathHelper.getUrl(
+                          this.picture,
+                          this.portalBaseUrl
+                        )}"
+                        alt="${msg(str`avatar`)}"
+                      />
                     `}
               </div>
               <div class="wrapper-info">
@@ -145,7 +163,10 @@ export class Eyebrow extends LitElement {
                   <div class="sign-out">
                     <a
                       id="sign-out"
-                      href="${this.logoutLink}"
+                      href="${pathHelper.getUrl(
+                        this.logoutLink,
+                        this.portalBaseUrl
+                      )}"
                       title="${msg(str`Sign out`)}"
                       tabindex="0"
                     >
