@@ -265,7 +265,9 @@ export class ExtendedUportalHeader extends LitElement {
   private async _load() {
     let userInfo = null;
     if (!this.debug)
-      userInfo = await openIdConnect({ userInfoApiUrl: this.userInfoApiUrl });
+      userInfo = await openIdConnect({
+        userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
+      });
     const previusStatus = this._userInfos;
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
