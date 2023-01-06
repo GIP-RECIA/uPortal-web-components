@@ -1,4 +1,7 @@
-import openIdConnect, { JWT } from '@uportal/open-id-connect';
+import openIdConnect, {
+  type Response as OIDCResponse,
+  type JWT,
+} from '@uportal/open-id-connect';
 import get from 'lodash/get';
 
 export interface userInfo {
@@ -12,15 +15,19 @@ export default class userInfoService {
     userInfoApiUrl: string,
     layoutApiUrl: string,
     orgIdAttribute: string,
+    userInfo: OIDCResponse | null = null,
     debug: boolean
   ): Promise<userInfo | null> {
     try {
       const requestHeaders: HeadersInit = new Headers();
       let userInfoFetch;
       if (!debug) {
-        userInfoFetch = await openIdConnect({ userInfoApiUrl });
+        if (userInfo === null || !userInfo?.encoded) {
+          userInfoFetch = await openIdConnect({ userInfoApiUrl });
+        } else {
+          userInfoFetch = userInfo;
+        }
         const jwt = userInfoFetch.encoded;
-
         requestHeaders.set('Authorization', `Bearer ${jwt}`);
       } else {
         const response = await fetch(userInfoApiUrl);
@@ -33,7 +40,6 @@ export default class userInfoService {
           decoded: data,
         };
       }
-
       const options = {
         method: 'GET',
         credentials: 'include' as RequestCredentials,

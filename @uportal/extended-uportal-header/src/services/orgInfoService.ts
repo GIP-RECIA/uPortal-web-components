@@ -1,4 +1,6 @@
-import openIdConnect from '@uportal/open-id-connect';
+import openIdConnect, {
+  type Response as OIDCResponse,
+} from '@uportal/open-id-connect';
 export interface orgInfo {
   displayName: string;
   logo?: string;
@@ -8,15 +10,19 @@ export default class orgInfoService {
     userInfoApiUrl: string,
     orgApiUrl: string,
     orgId: string,
-    debug: boolean
+    userInfo: OIDCResponse | null = null,
+    debug = false
   ): Promise<orgInfo | null> {
     try {
       const requestHeaders: HeadersInit = new Headers();
       let userInfoFetch;
       if (!debug) {
-        userInfoFetch = await openIdConnect({ userInfoApiUrl });
+        if (userInfo === null || !userInfo?.encoded) {
+          userInfoFetch = await openIdConnect({ userInfoApiUrl });
+        } else {
+          userInfoFetch = userInfo;
+        }
         const jwt = userInfoFetch.encoded;
-
         requestHeaders.set('Authorization', `Bearer ${jwt}`);
       }
 

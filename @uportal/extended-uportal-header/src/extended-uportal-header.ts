@@ -19,6 +19,7 @@ import sizeHelper from '@helpers/sizeHelper';
 import { setLocale } from '@helpers/localisation';
 import langHelper from '@helpers/langHelper';
 /** Services */
+import openIdConnect from '@uportal/open-id-connect';
 import userInfoService, { userInfo } from '@services/userInfoService';
 import orgInfoService, { orgInfo } from '@services/orgInfoService';
 import templateService, { template } from '@services/templateService';
@@ -177,6 +178,8 @@ export class ExtendedUportalHeader extends LitElement {
 
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
+  private _firstDataLoad = true;
+  private _firstTplLoad = true;
 
   constructor() {
     super();
@@ -221,7 +224,12 @@ export class ExtendedUportalHeader extends LitElement {
       _changedProperties.has('layoutApiUrl') ||
       _changedProperties.has('organizationApiUrl')
     ) {
-      this._debounceLoad();
+      if (this._firstDataLoad) {
+        this._load();
+        this._firstDataLoad = false;
+      } else {
+        this._debounceLoad();
+      }
     }
     if (
       this.template === null ||
@@ -229,7 +237,11 @@ export class ExtendedUportalHeader extends LitElement {
       _changedProperties.has('templateApiUrl') ||
       _changedProperties.has('templateApiPath')
     ) {
-      this._debounceGetTemplate();
+      if (this._firstTplLoad) {
+        this._getTemplate();
+      } else {
+        this._debounceGetTemplate();
+      }
     }
     if (
       _changedProperties.has('sessionRenewDisable') ||
@@ -240,23 +252,26 @@ export class ExtendedUportalHeader extends LitElement {
     if (!this._loaded) {
       return false;
     }
-    this._getTemplate();
     return true;
   }
 
   protected firstUpdated(): void {
-    this._debounceRenewSession();
+    this._renewSession();
   }
 
   private _debounceLoad = debounce(this._load.bind(this), 500);
   private _debounceLoadAfterAction = debounce(this._load.bind(this), 5000);
 
   private async _load() {
+    let userInfo = null;
+    if (!this.debug)
+      userInfo = await openIdConnect({ userInfoApiUrl: this.userInfoApiUrl });
     const previusStatus = this._userInfos;
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
       this.orgAttributeName,
+      userInfo,
       this.debug
     );
     if (this._userInfos?.orgId) {
@@ -264,6 +279,7 @@ export class ExtendedUportalHeader extends LitElement {
         this._makeUrl(this.userInfoApiUrl),
         this._makeUrl(this.organizationApiUrl),
         this._userInfos.orgId,
+        userInfo,
         this.debug
       );
     }
