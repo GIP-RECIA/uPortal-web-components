@@ -180,6 +180,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _orgInfos: orgInfo | null = null;
   private _firstDataLoad = true;
   private _firstTplLoad = true;
+  private _firstRender = false;
 
   constructor() {
     super();
@@ -249,7 +250,7 @@ export class ExtendedUportalHeader extends LitElement {
     ) {
       this._debounceRenewSession();
     }
-    if (!this._loaded) {
+    if (!this._loaded && this._firstRender) {
       return false;
     }
     return true;
@@ -433,6 +434,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _renderMenu() {
+    this._firstRender = true;
     return this._userInfos && this._orgInfos
       ? html` <div id="extended-uportal-header-menu">
           <slot name="menu">
