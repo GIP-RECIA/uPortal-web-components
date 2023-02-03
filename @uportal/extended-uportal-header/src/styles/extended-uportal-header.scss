@@ -66,16 +66,24 @@
       }
     }
   }
-  #extended-uportal-header-user {
+  #extended-uportal-header-user,
+  #extended-uportal-header-login {
     flex: 1;
     justify-content: right;
     align-content: center;
+  }
+  #extended-uportal-header-user {
     & eyebrow-user-info {
       margin-top: auto;
       margin-bottom: auto;
       margin-left: var(--ext-header-tpl-spaces);
       margin-right: var(--ext-header-tpl-spaces);
     }
+    @media screen and (max-width: 768px) {
+      display: none;
+    }
+  }
+  #extended-uportal-header-login {
     a.login-button {
       display: flex;
       align-items: center;
@@ -92,9 +100,6 @@
           width: 100%;
         }
       }
-    }
-    @media screen and (max-width: 768px) {
-      display: none;
     }
   }
 }

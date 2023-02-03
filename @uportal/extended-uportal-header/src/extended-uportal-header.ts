@@ -486,7 +486,7 @@ export class ExtendedUportalHeader extends LitElement {
             ></eyebrow-user-info>
           </slot>
         </div>`
-      : html`<div id="extended-uportal-header-user">
+      : html`<div id="extended-uportal-header-login">
           <slot name="login">
             <a
               href="${this.signInUrl}"
