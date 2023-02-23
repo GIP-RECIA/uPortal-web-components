@@ -8,6 +8,7 @@ import {
   unsafeCSS,
   TemplateResult,
   PropertyValueMap,
+  nothing,
 } from 'lit';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -19,7 +20,9 @@ import sizeHelper from '@helpers/sizeHelper';
 import { setLocale } from '@helpers/localisation';
 import langHelper from '@helpers/langHelper';
 /** Services */
-import openIdConnect from '@uportal/open-id-connect';
+import openIdConnect, {
+  Response as OIDCResponse,
+} from '@uportal/open-id-connect';
 import userInfoService, { userInfo } from '@services/userInfoService';
 import orgInfoService, { orgInfo } from '@services/orgInfoService';
 import templateService, { template } from '@services/templateService';
@@ -176,6 +179,9 @@ export class ExtendedUportalHeader extends LitElement {
   @state()
   private _loaded: number | boolean = false;
 
+  @state()
+  private _userApiResult: OIDCResponse | null = null;
+
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
   private _firstDataLoad = true;
@@ -220,7 +226,6 @@ export class ExtendedUportalHeader extends LitElement {
       langHelper.setReference(this.messages);
     }
     if (
-      !this._loaded ||
       _changedProperties.has('userInfoApiUrl') ||
       _changedProperties.has('layoutApiUrl') ||
       _changedProperties.has('organizationApiUrl')
@@ -229,7 +234,7 @@ export class ExtendedUportalHeader extends LitElement {
         this._load();
         this._firstDataLoad = false;
       } else {
-        this._debounceLoad();
+        if (this._loaded) this._debounceLoad();
       }
     }
     if (
@@ -263,10 +268,9 @@ export class ExtendedUportalHeader extends LitElement {
   private _debounceLoad = debounce(this._load.bind(this), 500);
   private _debounceLoadAfterAction = debounce(this._load.bind(this), 5000);
 
-  private async _load() {
-    let userInfo = null;
+  private async _load(ident = 0) {
     if (!this.debug)
-      userInfo = await openIdConnect({
+      this._userApiResult = await openIdConnect({
         userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
       });
     const previusStatus = this._userInfos;
@@ -274,7 +278,7 @@ export class ExtendedUportalHeader extends LitElement {
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
       this.orgAttributeName,
-      userInfo,
+      this._userApiResult,
       this.debug
     );
     if (this._userInfos?.orgId) {
@@ -282,7 +286,7 @@ export class ExtendedUportalHeader extends LitElement {
         this._makeUrl(this.userInfoApiUrl),
         this._makeUrl(this.organizationApiUrl),
         this._userInfos.orgId,
-        userInfo,
+        this._userApiResult,
         this.debug
       );
     }
@@ -297,12 +301,12 @@ export class ExtendedUportalHeader extends LitElement {
 
   private async _renewSession() {
     if (this.sessionRenewDisable) {
-      this._debounceLoadAfterAction();
+      if (this._loaded) this._debounceLoadAfterAction();
       return;
     }
     const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
     if (session !== null && this._isConnected() != session.isConnected) {
-      this._debounceLoad();
+      if (this._loaded) this._debounceLoad();
     }
   }
 
@@ -435,6 +439,9 @@ export class ExtendedUportalHeader extends LitElement {
 
   private _renderMenu() {
     this._firstRender = true;
+    const userApiResult = this._userApiResult
+      ? JSON.stringify(this._userApiResult)
+      : nothing;
     return this._userInfos && this._orgInfos
       ? html` <div id="extended-uportal-header-menu">
           <slot name="menu">
@@ -451,6 +458,7 @@ export class ExtendedUportalHeader extends LitElement {
               portlet-api-url="${this.portletApiUrl}"
               organization-api-url="${this.organizationApiUrl}"
               user-info-api-url="${this.userInfoApiUrl}"
+              user-info=${userApiResult}
               sign-out-url="${this.signoutUrl}"
               user-info-portlet-url="${this.userInfoPortletUrl}"
               switch-org-portlet-url="${this.switchOrgPortletUrl}"
