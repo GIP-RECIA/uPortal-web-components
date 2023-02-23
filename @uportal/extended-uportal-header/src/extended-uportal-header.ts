@@ -268,7 +268,7 @@ export class ExtendedUportalHeader extends LitElement {
   private _debounceLoad = debounce(this._load.bind(this), 500);
   private _debounceLoadAfterAction = debounce(this._load.bind(this), 5000);
 
-  private async _load(ident = 0) {
+  private async _load() {
     if (!this.debug)
       this._userApiResult = await openIdConnect({
         userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
