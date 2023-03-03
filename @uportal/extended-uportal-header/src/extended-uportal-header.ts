@@ -180,6 +180,7 @@ export class ExtendedUportalHeader extends LitElement {
   @state()
   private _loaded: number | boolean = false;
 
+  private _sessionTimeout = 300000;
   private _userApiResult: OIDCResponse | null = null;
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
@@ -239,6 +240,7 @@ export class ExtendedUportalHeader extends LitElement {
     ) {
       this._debounceGetTemplate();
     }
+
     if (!this._loaded) {
       return false;
     }
@@ -280,7 +282,7 @@ export class ExtendedUportalHeader extends LitElement {
 
   private _throttleRenewSession = throttle(
     this._renewSession.bind(this),
-    30000
+    this._sessionTimeout
   );
 
   private async _renewSession() {
