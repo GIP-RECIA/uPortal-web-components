@@ -29,6 +29,7 @@ import templateService, { template } from '@services/templateService';
 import sessionService from '@services/sessionService';
 /** Libraries */
 import debounce from 'lodash/debounce';
+import throttle from 'lodash/throttle';
 /** Components */
 import '@gip-recia/eyebrow-user-info-lit';
 import '@gip-recia/esco-content-menu-lit';
@@ -179,14 +180,11 @@ export class ExtendedUportalHeader extends LitElement {
   @state()
   private _loaded: number | boolean = false;
 
-  @state()
   private _userApiResult: OIDCResponse | null = null;
-
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
-  private _firstDataLoad = true;
-  private _firstTplLoad = true;
-  private _firstRender = false;
+  private _loadingData = false;
+  private _loadingTemplate = false;
 
   constructor() {
     super();
@@ -226,49 +224,31 @@ export class ExtendedUportalHeader extends LitElement {
       langHelper.setReference(this.messages);
     }
     if (
+      (!this._loaded && !this._loadingData) ||
       _changedProperties.has('userInfoApiUrl') ||
       _changedProperties.has('layoutApiUrl') ||
       _changedProperties.has('organizationApiUrl')
     ) {
-      if (this._firstDataLoad) {
-        this._load();
-        this._firstDataLoad = false;
-      } else {
-        if (this._loaded) this._debounceLoad();
-      }
+      this._debounceLoad();
     }
     if (
-      this.template === null ||
+      (!this.template && !this._loadingTemplate) ||
       _changedProperties.has('template') ||
       _changedProperties.has('templateApiUrl') ||
       _changedProperties.has('templateApiPath')
     ) {
-      if (this._firstTplLoad) {
-        this._getTemplate();
-      } else {
-        this._debounceGetTemplate();
-      }
+      this._debounceGetTemplate();
     }
-    if (
-      _changedProperties.has('sessionRenewDisable') ||
-      _changedProperties.has('sessionApiUrl')
-    ) {
-      this._debounceRenewSession();
-    }
-    if (!this._loaded && this._firstRender) {
+    if (!this._loaded) {
       return false;
     }
     return true;
   }
 
-  protected firstUpdated(): void {
-    this._renewSession();
-  }
-
   private _debounceLoad = debounce(this._load.bind(this), 500);
-  private _debounceLoadAfterAction = debounce(this._load.bind(this), 5000);
 
   private async _load() {
+    this._loadingData = true;
     if (!this.debug)
       this._userApiResult = await openIdConnect({
         userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
@@ -290,6 +270,7 @@ export class ExtendedUportalHeader extends LitElement {
         this.debug
       );
     }
+    this._loadingData = false;
     if (previusStatus != this._userInfos) {
       this._loaded = Date.now();
       return;
@@ -297,16 +278,20 @@ export class ExtendedUportalHeader extends LitElement {
     this._loaded = true;
   }
 
-  private _debounceRenewSession = debounce(this._renewSession.bind(this), 3000);
+  private _throttleRenewSession = throttle(
+    this._renewSession.bind(this),
+    30000
+  );
 
   private async _renewSession() {
     if (this.sessionRenewDisable) {
-      if (this._loaded) this._debounceLoadAfterAction();
+      this._debounceLoad();
       return;
     }
     const session = await sessionService.get(this._makeUrl(this.sessionApiUrl));
-    if (session !== null && this._isConnected() != session.isConnected) {
-      if (this._loaded) this._debounceLoad();
+    if (session !== null) {
+      if (this._loaded && this._isConnected() && !session.isConnected)
+        this._debounceLoad();
     }
   }
 
@@ -314,11 +299,15 @@ export class ExtendedUportalHeader extends LitElement {
 
   private async _getTemplate() {
     if (this.template !== null) return;
+    this._loadingTemplate = true;
     this.template = await templateService.get(this._tplApiUrl(), this.domain);
+    this._loadingTemplate = false;
   }
 
   private _handleUserAction() {
-    this._debounceRenewSession();
+    if (this._loaded && !this.sessionRenewDisable) {
+      this._throttleRenewSession();
+    }
   }
 
   private _makeUrl(path: string, domain = ''): string {
@@ -438,7 +427,6 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _renderMenu() {
-    this._firstRender = true;
     const userApiResult = this._userApiResult
       ? JSON.stringify(this._userApiResult)
       : nothing;
