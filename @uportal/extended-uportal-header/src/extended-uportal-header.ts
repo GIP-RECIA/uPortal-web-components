@@ -179,9 +179,12 @@ export class ExtendedUportalHeader extends LitElement {
 
   @state()
   private _loaded: number | boolean = false;
+  @state()
+  private _userApiResult: OIDCResponse | null = null;
 
   private _sessionTimeout = 300000;
-  private _userApiResult: OIDCResponse | null = null;
+  private _tokenExpireTime = 0;
+  private _loadingToken = false;
   private _userInfos: userInfo | null = null;
   private _orgInfos: orgInfo | null = null;
   private _loadingData = false;
@@ -251,10 +254,7 @@ export class ExtendedUportalHeader extends LitElement {
 
   private async _load() {
     this._loadingData = true;
-    if (!this.debug)
-      this._userApiResult = await openIdConnect({
-        userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
-      });
+    await this._renewToken();
     const previusStatus = this._userInfos;
     this._userInfos = await userInfoService.get(
       this._makeUrl(this.userInfoApiUrl),
@@ -278,6 +278,24 @@ export class ExtendedUportalHeader extends LitElement {
       return;
     }
     this._loaded = true;
+  }
+
+  private _debounceRenewToken = debounce(this._renewToken.bind(this), 500);
+
+  private async _renewToken() {
+    const currentTime = Math.ceil(Date.now() / 1000);
+    if (
+      !this.debug &&
+      !this._loadingToken &&
+      currentTime >= this._tokenExpireTime
+    ) {
+      this._loadingToken = true;
+      this._userApiResult = await openIdConnect({
+        userInfoApiUrl: this._makeUrl(this.userInfoApiUrl),
+      });
+      this._tokenExpireTime = this._userApiResult.decoded.exp - 5 ?? 0;
+      this._loadingToken = false;
+    }
   }
 
   private _throttleRenewSession = throttle(
@@ -307,8 +325,9 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _handleUserAction() {
-    if (this._loaded && !this.sessionRenewDisable) {
-      this._throttleRenewSession();
+    if (this._loaded) {
+      this._debounceRenewToken();
+      if (!this.sessionRenewDisable) this._throttleRenewSession();
     }
   }
 
