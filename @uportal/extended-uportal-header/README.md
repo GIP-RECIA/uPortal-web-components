@@ -59,6 +59,13 @@ The available messages to override are as follows:
     "buttons": {
       "logout": "Sign out",
       "menuClose": "Close menu"
+    },
+    "eyebrow": {
+      "close": "Close account menu",
+      "open": "Open account menu",
+      "avatar": "avatar",
+      "information": "See my account information",
+      "logout": "Sign out"
     }
   }
 }
