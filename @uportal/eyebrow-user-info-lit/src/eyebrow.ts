@@ -1,26 +1,30 @@
 // import 'core-js/stable';
-import { html, LitElement, css, unsafeCSS, TemplateResult } from 'lit';
+import 'regenerator-runtime';
+import {
+  html,
+  LitElement,
+  css,
+  unsafeCSS,
+  TemplateResult,
+  PropertyValueMap,
+} from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
-import { configureLocalization, msg, localized, str } from '@lit/localize';
+import { msg, str, updateWhenLocaleChanges } from '@lit/localize';
 import scss from '@styles/eyebrow.scss';
 import langHelper from '@helpers/langHelper';
 import pathHelper from '@helpers/pathHelper';
 import { library, icon } from '@fortawesome/fontawesome-svg-core';
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { setLocale } from '@helpers/localisation';
 
-export const { setLocale } = configureLocalization({
-  sourceLocale: 'en',
-  targetLocales: ['fr'],
-  loadLocale: (locale) =>
-    import(/* webpackMode: "eager" */ `@locales/${locale}.ts`),
-});
-
-@localized()
 @customElement('eyebrow-user-info')
 export class Eyebrow extends LitElement {
+  @property({ type: Object })
+  messages = [];
   @property({ type: String, attribute: 'portal-base-url' })
   portalBaseUrl = '';
   @property({ type: String, attribute: 'display-name' })
@@ -54,6 +58,8 @@ export class Eyebrow extends LitElement {
     const lang = langHelper.getPageLang(lhOpts);
     setLocale(lang);
     library.add(faSignOutAlt);
+    langHelper.setLocale(lang);
+    updateWhenLocaleChanges(this);
   }
 
   connectedCallback(): void {
@@ -66,6 +72,16 @@ export class Eyebrow extends LitElement {
     super.disconnectedCallback();
     this.removeEventListener('keyup', this.handleKeyPress.bind(this));
     window.removeEventListener('click', this.handleClick.bind(this));
+  }
+
+  protected shouldUpdate(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    _changedProperties: PropertyValueMap<any> | Map<PropertyKey, unknown>
+  ): boolean {
+    if (_changedProperties.has('messages')) {
+      langHelper.setReference(this.messages);
+    }
+    return true;
   }
 
   firstUpdated(): void {
@@ -93,8 +109,14 @@ export class Eyebrow extends LitElement {
             tabindex="0"
             aria-expanded="${this.visible ? true : false}"
             aria-label="${this.visible
-              ? msg(str`Close account menu`)
-              : msg(str`Open account menu`)}"
+              ? langHelper.localTranslation(
+                  'message.eyebrow.close',
+                  msg(str`Close account menu`)
+                )
+              : langHelper.localTranslation(
+                  'message.eyebrow.open',
+                  msg(str`Open account menu`)
+                )}"
           >
             <div class="user-name">
               <span class="label">${this.displayName}</span>
@@ -102,7 +124,10 @@ export class Eyebrow extends LitElement {
             <div class="user-avatar">
               <img
                 src="${this.picture}"
-                alt="${msg(str`avatar`)}"
+                alt="${langHelper.localTranslation(
+                  'message.eyebrow.avatar',
+                  msg(str`avatar`)
+                )}"
                 style=${styleMap({
                   width: this.avatarSize,
                   height: this.avatarSize,
@@ -127,7 +152,10 @@ export class Eyebrow extends LitElement {
                           this.moreLink,
                           this.portalBaseUrl
                         )}"
-                        title="${msg(str`See my account information`)}"
+                        title="${langHelper.localTranslation(
+                          'message.eyebrow.information',
+                          msg(str`See my account information`)
+                        )}"
                         tabindex="0"
                       >
                         <img
@@ -135,7 +163,10 @@ export class Eyebrow extends LitElement {
                             this.picture,
                             this.portalBaseUrl
                           )}"
-                          alt="${msg(str`avatar`)}"
+                          alt="${langHelper.localTranslation(
+                            'message.eyebrow.avatar',
+                            msg(str`avatar`)
+                          )}"
                         />
                       </a>
                     `
@@ -145,7 +176,10 @@ export class Eyebrow extends LitElement {
                           this.picture,
                           this.portalBaseUrl
                         )}"
-                        alt="${msg(str`avatar`)}"
+                        alt="${langHelper.localTranslation(
+                          'message.eyebrow.avatar',
+                          msg(str`avatar`)
+                        )}"
                       />
                     `}
               </div>
@@ -167,10 +201,18 @@ export class Eyebrow extends LitElement {
                         this.logoutLink,
                         this.portalBaseUrl
                       )}"
-                      title="${msg(str`Sign out`)}"
+                      title="${langHelper.localTranslation(
+                        'message.eyebrow.logout',
+                        msg(str`Sign out`)
+                      )}"
                       tabindex="0"
                     >
-                      <span>${msg(str`Sign out`)}</span>
+                      <span
+                        >${langHelper.localTranslation(
+                          'message.eyebrow.logout',
+                          msg(str`Sign out`)
+                        )}</span
+                      >
                       ${unsafeHTML(faSignOutIcon)}
                     </a>
                   </div>

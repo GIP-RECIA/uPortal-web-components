@@ -20,7 +20,9 @@
     "@fortawesome/free-solid-svg-icons": "^6.2.0",
     "@lit/localize": "^0.11.1",
     "core-js": "^3.19.1",
-    "lit": "^2.0.2"
+    "lit": "^2.0.2",
+    "lodash": "^4.17.21",
+    "regenerator-runtime": "^0.13.9"
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
@@ -28,6 +30,7 @@
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-typescript": "^7.1.0",
     "@lit/localize-tools": "^0.4.0",
+    "@types/lodash": "^4.14.178",
     "@typescript-eslint/eslint-plugin": "^4.31.2",
     "@typescript-eslint/parser": "^4.31.2",
     "acorn": "^8.6.0",

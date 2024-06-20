@@ -1,4 +1,27 @@
+import get from 'lodash/get';
+export interface LangRef {
+  locales: string[];
+  messages: {
+    message: {
+      [section: string]: {
+        [translation: string]: string;
+      };
+    };
+  };
+}
+
 export default class langHelper {
+  private static locale = 'en';
+  private static reference: LangRef[];
+
+  static setLocale(lang: string): void {
+    this.locale = lang;
+  }
+
+  static setReference(ref: LangRef[]): void {
+    this.reference = ref;
+  }
+
   static getBrowserLocales(options = {}): string[] {
     const defaultOptions = {
       languageCodeOnly: true,
@@ -57,5 +80,15 @@ export default class langHelper {
     );
 
     return detectedLocale || opt.defaultLanguage;
+  }
+
+  static localTranslation(stringId: string, defaultString: string): string {
+    const currentRef = this.reference?.find((ref) =>
+      ref.locales.includes(this.locale)
+    );
+    const currentMessages = currentRef?.messages;
+    return currentMessages
+      ? get(currentMessages as unknown, stringId, defaultString)
+      : defaultString;
   }
 }

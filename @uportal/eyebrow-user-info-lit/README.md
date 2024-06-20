@@ -11,6 +11,7 @@
 ></eyebrow-user-info>
 ```
 
+- messages: optional, see [internationalization](#internationalization);
 - displayName: required
 - email: optional
 - picture: required, the url of the user picture/avatar
@@ -18,6 +19,35 @@
 - logoutLink: optional, the url to sign out if you prefer to show it in the dropdown
 - menuIsDark: default value is true, set the text color into the menu to white, if false will be black, usefull for colored background
 - avatarSize: default value is "28px", set the width and heigth size of the image.
+
+### internationalization
+
+The component support an internationalization mixin. This adds the additional prop `messages` which can be applied to override the default text messages in the various embed components.
+
+For example:
+
+```html
+<eyebrow-user-info
+  messages='[{"locales": ["en", "en-US"], "messages": { "message": {"eyebrow": { "logout": "Sign out !" } }}}]'
+>
+</eyebrow-user-info>
+```
+
+The available messages to override are as follows:
+
+```json
+{
+  "message": {
+    "eyebrow": {
+      "close": "Close account menu",
+      "open": "Open account menu",
+      "avatar": "avatar",
+      "information": "See my account information",
+      "logout": "Sign out"
+    }
+  }
+}
+```
 
 ## Example of use into uPortal
 
