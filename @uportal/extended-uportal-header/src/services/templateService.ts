@@ -1,8 +1,12 @@
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type config = Record<string, string | boolean | Array<object>>;
+
 export interface template {
   name: string;
   iconPath: string;
   iconOpacity: number;
   color: string;
+  config?: config;
 }
 export default class templateService {
   static async get(
@@ -41,6 +45,7 @@ export default class templateService {
               iconPath: icon?.path ?? '',
               iconOpacity: icon?.opacity ?? 1,
               color,
+              config: templates.config,
             };
           } else {
             console.error('Incorrect template datas', icon, color);

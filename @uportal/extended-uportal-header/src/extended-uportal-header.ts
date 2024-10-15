@@ -43,6 +43,61 @@ import defaultAvatar from '@images/default-avatar.svg';
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons/faRightToBracket';
 
+interface properties {
+  messages: unknown;
+  domain: string;
+  portailPath: string;
+  serviceName: string;
+  favoritesPortletCardSize: string;
+  gridPortletCardSize: string;
+  defaultOrgLogoUrl: string;
+  defaultOrgLogoPath: string;
+  forceOrgLogoUrl: string;
+  forceOrgLogoPath: string;
+  defaultOrgIconUrl: string;
+  defaultOrgIconPath: string;
+  defaultAvatarUrl: string;
+  defaultAvatarPath: string;
+  contextApiUrl: string;
+  favoriteApiUrl: string;
+  layoutApiUrl: string;
+  portletApiUrl: string;
+  organizationApiUrl: string;
+  userInfoApiUrl: string;
+  sessionApiUrl: string;
+  templateApiUrl: string;
+  templateApiPath: string;
+  template: template | null;
+  signOutUrl: string;
+  userInfoPortletUrl: string;
+  switchOrgPortletUrl: string;
+  orgAttributeName: string;
+  orgLogoUrlAttributeName: string;
+  userAllOrgsIdAttributeName: string;
+  hideActionMode: 'auto' | 'always' | 'never';
+  showFavoritesInSlider: boolean;
+  iconType:
+    | 'hamburger'
+    | 'four-square'
+    | 'four-empty-square'
+    | 'nine-square'
+    | 'nine-empty-square'
+    | 'four-circle'
+    | 'four-empty-circle'
+    | 'nine-circle'
+    | 'nine-empty-circle';
+  returnHomeTarget: string;
+  returnHomeTitle: string | null;
+  height: string;
+  sessionRenewDisable: boolean;
+  debug: boolean;
+}
+
+type overridableProperties = Omit<
+  properties,
+  'templateApiUrl' | 'templateApiPath' | 'template'
+>;
+
 @customElement('extended-uportal-header')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export class ExtendedUportalHeader extends LitElement {
@@ -119,7 +174,7 @@ export class ExtendedUportalHeader extends LitElement {
   @property({ type: Object })
   template: template | null = null;
   @property({ type: String, attribute: 'sign-out-url' })
-  signoutUrl = process.env.APP_LOGOUT_URL ?? '';
+  signOutUrl = process.env.APP_LOGOUT_URL ?? '';
   @property({ type: String, attribute: 'sign-in-url' })
   signInUrl = '';
   @property({ type: String, attribute: 'user-info-portlet-url' })
@@ -174,6 +229,8 @@ export class ExtendedUportalHeader extends LitElement {
   height = 'auto';
   @property({ type: Boolean, attribute: 'disable-session-renew' })
   sessionRenewDisable = false;
+  @property({ type: Object, attribute: 'dont-override' })
+  dontOverride: Array<keyof overridableProperties> | null = null;
   @property({ type: Boolean })
   debug = false;
 
@@ -228,7 +285,14 @@ export class ExtendedUportalHeader extends LitElement {
       langHelper.setReference(this.messages);
     }
     if (
-      (!this._loaded && !this._loadingData) ||
+      !this.template &&
+      !this._loadingTemplate &&
+      !this._loaded &&
+      !this._loadingData
+    ) {
+      this._firstLoad();
+    }
+    if (
       _changedProperties.has('userInfoApiUrl') ||
       _changedProperties.has('layoutApiUrl') ||
       _changedProperties.has('organizationApiUrl')
@@ -236,7 +300,6 @@ export class ExtendedUportalHeader extends LitElement {
       this._debounceLoad();
     }
     if (
-      (!this.template && !this._loadingTemplate) ||
       _changedProperties.has('template') ||
       _changedProperties.has('templateApiUrl') ||
       _changedProperties.has('templateApiPath')
@@ -248,6 +311,11 @@ export class ExtendedUportalHeader extends LitElement {
       return false;
     }
     return true;
+  }
+
+  private async _firstLoad() {
+    await this._getTemplate();
+    this._debounceLoad();
   }
 
   private _debounceLoad = debounce(this._load.bind(this), 500);
@@ -321,7 +389,105 @@ export class ExtendedUportalHeader extends LitElement {
     if (this.template !== null) return;
     this._loadingTemplate = true;
     this.template = await templateService.get(this._tplApiUrl(), this.domain);
+    await this._overrideProperties();
     this._loadingTemplate = false;
+  }
+
+  private _defaultProperties: properties = {
+    messages: [],
+    domain: '',
+    portailPath: '',
+    serviceName: '',
+    favoritesPortletCardSize: 'small',
+    gridPortletCardSize: 'medium',
+    defaultOrgLogoUrl: '',
+    defaultOrgLogoPath: '',
+    forceOrgLogoUrl: '',
+    forceOrgLogoPath: '',
+    defaultOrgIconUrl: '',
+    defaultOrgIconPath: '',
+    defaultAvatarUrl: '',
+    defaultAvatarPath: '',
+    contextApiUrl: '',
+    favoriteApiUrl: '',
+    layoutApiUrl: '',
+    portletApiUrl: '',
+    organizationApiUrl: '',
+    userInfoApiUrl: '',
+    sessionApiUrl: '',
+    templateApiUrl: '',
+    templateApiPath: '',
+    template: null,
+    signOutUrl: '',
+    userInfoPortletUrl: '',
+    switchOrgPortletUrl: '',
+    orgAttributeName: 'ESCOSIRENCourant[0]',
+    orgLogoUrlAttributeName: 'otherAttributes.ESCOStructureLogo[0]',
+    userAllOrgsIdAttributeName: 'ESCOSIREN',
+    hideActionMode: 'auto',
+    showFavoritesInSlider: false,
+    iconType: 'hamburger',
+    returnHomeTarget: '_self',
+    returnHomeTitle: null,
+    height: 'auto',
+    sessionRenewDisable: false,
+    debug: false,
+  };
+
+  private async _overrideProperties() {
+    let config = this.template?.config;
+    if (config) {
+      config = Object.fromEntries(
+        Object.entries(config).map(([key, value]) => [
+          key.replace(/-./g, (m) => m.toUpperCase()[1]),
+          value,
+        ])
+      );
+
+      for (const [key, value] of Object.entries(config)) {
+        const currentValue = this[key as keyof overridableProperties];
+        const defaultValue =
+          this._defaultProperties[key as keyof overridableProperties];
+        const keepCurrent = !!this.dontOverride?.includes(
+          key as keyof overridableProperties
+        );
+
+        let override = false;
+        switch (typeof currentValue) {
+          case 'object':
+            if (
+              Array.isArray(currentValue) &&
+              Array.isArray(defaultValue) &&
+              currentValue.every((val) => defaultValue.includes(val))
+            )
+              override = true;
+            else if (defaultValue === null) {
+              if (currentValue === defaultValue || currentValue.length === 0)
+                override = true;
+            }
+            break;
+          default:
+            if (currentValue === defaultValue || currentValue === '')
+              override = true;
+            break;
+        }
+
+        this.debug &&
+          console.log({
+            key,
+            current: { value: currentValue, type: typeof currentValue },
+            default: { value: defaultValue, type: typeof defaultValue },
+            received: { value, type: typeof value },
+            override,
+            keepCurrent,
+          });
+
+        if (override && !keepCurrent) {
+          this[key as keyof overridableProperties] = value as never;
+          if (key === 'messages') langHelper.setReference(this.messages);
+        }
+      }
+    }
   }
 
   private _handleUserAction() {
@@ -468,7 +634,7 @@ export class ExtendedUportalHeader extends LitElement {
               organization-api-url="${this.organizationApiUrl}"
               user-info-api-url="${this.userInfoApiUrl}"
               user-info=${userApiResult}
-              sign-out-url="${this.signoutUrl}"
+              sign-out-url="${this.signOutUrl}"
               user-info-portlet-url="${this.userInfoPortletUrl}"
               switch-org-portlet-url="${this.switchOrgPortletUrl}"
               user-org-id-attribute-name="${this.orgAttributeName}"
@@ -498,7 +664,7 @@ export class ExtendedUportalHeader extends LitElement {
               display-name="${this._userInfos.displayName}"
               picture="${this._picture()}"
               email="${this._userInfos.email}"
-              logout-link="${this.signoutUrl}"
+              logout-link="${this.signOutUrl}"
               more-link="${this.userInfoPortletUrl}"
               avatar-size="28px"
             ></eyebrow-user-info>

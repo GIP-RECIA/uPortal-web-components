@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -21,28 +21,13 @@
   </head>
   <body>
     <extended-uportal-header
-      messages='[{"locales": ["fr", "fr-FR"], "messages": { "message": {"favorites": { "add": "Add me to your favorites!" },"header": {"gotoportal":"retour au portail"} }}}]'
-      domain="api.server2.local:3000"
-      service-name="Demo Prolongation ENT"
-      favorites-portlet-card-size="small"
-      grid-portlet-card-size="auto"
-      hide-action-mode="never"
-      organization-api-url="/orginfo"
-      sign-out-url="#signout"
-      user-info-portlet-url="#user-info"
-      switch-org-portlet-url="#switch-org"
-      show-favorites-in-slider
-      template='{
-        "iconPath": "",
-        "iconOpacity": 1,
-        "color":"#057436"
-      }'
-      return-home-title="retour à l'accueil"
-      return-home-target="_self"
-      icon-type="nine-square"
       debug
     >
       <div slot="not-loaded">NOT LOADED</div>
     </extended-uportal-header>
+    <script type="text/javascript">
+      const extUpHeader = document.querySelector('extended-uportal-header');
+      extUpHeader.setAttribute('domain', `${window.document.domain}:3000`)
+    </script>
   </body>
 </html>
