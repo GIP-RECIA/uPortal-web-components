@@ -18247,7 +18247,8 @@
       "show-favorites-in-slider": true,
       "return-home-title": "retour à l'accueil",
       "return-home-target": "_self",
-      "icon-type": "nine-square"
+      "icon-type": "nine-square",
+      "portlet-info-api-url": "/portlet"
     }
   },
   "session": {
@@ -18258,6 +18259,11 @@
       "serverName": "bouleau.srv-ent.brgm.recia.net",
       "userName": "Fxxxxxx",
       "version": "5.12.0"
+    }
+  },
+  "portlet": {
+    "portlet": {
+      "title": "Demo Prolongation ENT"
     }
   }
 }

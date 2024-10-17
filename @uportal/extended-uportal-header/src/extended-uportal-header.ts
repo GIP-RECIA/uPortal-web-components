@@ -42,6 +42,7 @@ import defaultAvatar from '@images/default-avatar.svg';
 /** Icons */
 import { icon } from '@fortawesome/fontawesome-svg-core';
 import { faRightToBracket } from '@fortawesome/free-solid-svg-icons/faRightToBracket';
+import portletService from '@services/portletService';
 
 interface properties {
   messages: unknown;
@@ -90,6 +91,8 @@ interface properties {
   returnHomeTitle: string | null;
   height: string;
   sessionRenewDisable: boolean;
+  portletInfoApiUrl: string;
+  fname: string;
   debug: boolean;
 }
 
@@ -231,6 +234,10 @@ export class ExtendedUportalHeader extends LitElement {
   sessionRenewDisable = false;
   @property({ type: Object, attribute: 'dont-override' })
   dontOverride: Array<keyof overridableProperties> | null = null;
+  @property({ type: String, attribute: 'portlet-info-api-url' })
+  portletInfoApiUrl = '';
+  @property({ type: String })
+  fname = '';
   @property({ type: Boolean })
   debug = false;
 
@@ -315,6 +322,7 @@ export class ExtendedUportalHeader extends LitElement {
 
   private async _firstLoad() {
     await this._getTemplate();
+    this._loadPortletInformations();
     this._debounceLoad();
   }
 
@@ -431,6 +439,8 @@ export class ExtendedUportalHeader extends LitElement {
     returnHomeTitle: null,
     height: 'auto',
     sessionRenewDisable: false,
+    portletInfoApiUrl: '',
+    fname: '',
     debug: false,
   };
 
@@ -490,6 +500,20 @@ export class ExtendedUportalHeader extends LitElement {
     }
   }
 
+  private async _loadPortletInformations() {
+    if (
+      this.portletInfoApiUrl === '' ||
+      this.fname === '' ||
+      this.serviceName !== ''
+    )
+      return;
+    const data = await portletService.get(
+      this._makeUrl(this.portletInfoApiUrl),
+      this.fname
+    );
+    if (data) this.serviceName = data.title;
+  }
+
   private _handleUserAction() {
     if (this._loaded) {
       this._debounceRenewToken();
@@ -498,6 +522,7 @@ export class ExtendedUportalHeader extends LitElement {
   }
 
   private _makeUrl(path: string, domain = ''): string {
+    if (path.startsWith('http')) return path;
     const protocol = this.debug ? 'http' : 'https';
     return `${protocol}://${domain == '' ? this.domain : domain}${path}`;
   }
