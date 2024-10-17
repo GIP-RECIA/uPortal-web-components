@@ -1,6 +1,6 @@
 {
   "name": "@gip-recia/extended-uportal-header",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "a component to deport the uPortal menu",
   "author": "Gregory Brousse <pro@gregory-brousse.fr>",
   "main": "dist/js/extended-uportal-header.js",
