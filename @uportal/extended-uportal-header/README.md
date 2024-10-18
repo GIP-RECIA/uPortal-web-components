@@ -96,6 +96,7 @@ The available messages to override are as follows:
 - `template-api-url`: type: `String`,optional, url on which the api request is done to obtain template informations;
 - `template-api-path`: type: `String`,optional, path from portal domain on which the api request is done to obtain template informations;
 - `template`: type: `Object`,optional, JSON Object that define icon (`iconPath`), icon opacity (`iconOpacity`) and background color (`color`). Icon opacity override css variable. ex : `'{"iconPath": "","iconOpacity": 1,"color":"#057436"}'` ;
+- `sign-in-url`: type: `String`, optional, an uri/url to of the login button. If not set and user not connected, component will only render not-loaded slot see [not-loaded](#not-loaded);
 - `sign-out-url`: type: `String`, default: `/uPortal/Logout`, an uri/url to call when user logout (for a logout button);
 - `user-info-portlet-url`: type: `String`, default: `''`, an url/uri to the user information application;
 - `switch-org-portlet-url`: type: `String`, default: `''`, an optional url/url of a rest api to obtain institutional organization information;
@@ -103,10 +104,12 @@ The available messages to override are as follows:
 - `org-logo-url-attribute-name`: type: `String`, default: `'otherAttributes.ESCOStructureLogo[0]'`, the attribute object path to obtain the organization Picture from organization details obtained from the organization's api;
 - `user-all-orgs-id-attribute-name`: type: `String`, default: `'ESCOSIREN`, the attribute object path to obtain all ids of the organizations linked to the user and to retrieve from the organization's api;
 - `hide-action-mode`: type: `String` : possible value `auto|always|never`, default: `auto`, define if we should show the actions, `auto` don't show on `small` breakpoint;
-- `show-favorites-in-slider`: type : `boolean` : show or not the favorites in a slider;
+- `show-favorites-in-slider`: type: `boolean` : show or not the favorites in a slider;
 - `icon-type`: type: `String` : possible value `four-square|four-empty-square|nine-square|nine-empty-square|never`, default: `hamburger`, define the menu icon type;
+- `dont-override` type: `Object`, optional, array of strings properties (camelcased) to not override in cas of default value usage;
+- `portlet-info-api-url` type: `String`, optional, the uri/url of the portlet api;
+- `fname` type: `String`, optional, fname of the corresponding portlet;
 - `debug`: type: `Boolean`, default: `false`, for the demo/debug mode to be able to run in a standalone way (disable api call).
--
 
 ### Slots
 
