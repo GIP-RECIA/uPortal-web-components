@@ -10,6 +10,7 @@ import { LitLoggable } from '@mixins/litLoggable';
 import sizeHelper from '@helpers/sizeHelper';
 /*Components*/
 import './content-menu';
+import '@gip-recia/change-etab';
 
 @customElement('esco-hamburger-menu')
 export class HamburgerMenu extends LitLoggable(LitElement) {
@@ -65,6 +66,8 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
   userInfoPortletUrl = '';
   @property({ type: String, attribute: 'switch-org-portlet-url' })
   switchOrgPortletUrl = '';
+  @property({ type: Boolean, attribute: 'switch-org-event' })
+  switchOrgEvent = false;
   @property({ type: String, attribute: 'user-org-id-attribute-name' })
   orgAttributeName = 'ESCOSIRENCourant[0]';
   @property({ type: String, attribute: 'org-logo-url-attribute-name' })
@@ -112,6 +115,8 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
   _isVisible = false;
   @state()
   _isLoaded = false;
+  @state()
+  _isSwitchOrg = false;
 
   constructor() {
     super();
@@ -144,7 +149,15 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
     this.dispatchEvent(toggleEvt);
   }
 
+  toggleSwitchOrg(e: Event): void {
+    e.preventDefault();
+    this._isSwitchOrg = !this._isSwitchOrg;
+  }
+
   render(): TemplateResult {
+    const isSwitchOrgEvent =
+      this.switchOrgEvent && !this.switchOrgPortletUrl.includes('/p/');
+
     return html`
       <div class="hamburger-menu">
         <div
@@ -199,8 +212,19 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
                     ?fake-attribute="${true}"
                     ?disable-cache="${this.disableCache}"
                     cache-ttl="${this.cacheTTL}"
+                    ?switch-org-event="${isSwitchOrgEvent}"
+                    @switch-org=${this.toggleSwitchOrg}
                   ></esco-content-menu>
                 </slot>
+                ${isSwitchOrgEvent
+                  ? html`
+                      <change-etab
+                        show="${this._isSwitchOrg}"
+                        change-etab-api="${this.switchOrgPortletUrl}"
+                        user-info-api-url="${this.userInfoApiUrl}"
+                      ></change-etab>
+                    `
+                  : html``}
               </div>
             `
           : html``}

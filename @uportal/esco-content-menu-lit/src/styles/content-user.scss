@@ -115,6 +115,20 @@
               height: 24px;
             }
           }
+
+          > button {
+            float: right;
+            color: white;
+            margin-right: 15px;
+            border: none;
+            background: none;
+            cursor: pointer;
+
+            > svg {
+              width: 24px;
+              height: 24px;
+            }
+          }
         }
       }
     }

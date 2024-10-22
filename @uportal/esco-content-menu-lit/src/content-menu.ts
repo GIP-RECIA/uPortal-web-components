@@ -76,6 +76,8 @@ export class ContentMenu extends LitLoggable(LitElement) {
   userInfoPortletUrl = '';
   @property({ type: String, attribute: 'switch-org-portlet-url' })
   switchOrgPortletUrl = '';
+  @property({ type: Boolean, attribute: 'switch-org-event' })
+  switchOrgEvent = false;
   @property({ type: String, attribute: 'user-org-id-attribute-name' })
   orgAttributeName = 'ESCOSIRENCourant[0]';
   @property({ type: String, attribute: 'org-logo-url-attribute-name' })
@@ -121,6 +123,8 @@ export class ContentMenu extends LitLoggable(LitElement) {
   _favorites: string[] | null = null;
   @state()
   _inError = false;
+  @state()
+  _forceOrgDisplayName = '';
 
   private _errorMessage = '';
   private _userInfos: OIDCResponse | null = null;
@@ -134,11 +138,27 @@ export class ContentMenu extends LitLoggable(LitElement) {
   connectedCallback(): void {
     super.connectedCallback();
     window.addEventListener('resize', this.calculateSize.bind(this));
+    window.addEventListener(
+      'update-structure-name',
+      this.updateStructureName.bind(this)
+    );
+    window.addEventListener(
+      'update-structure-logo',
+      this.updateStructureLogo.bind(this)
+    );
   }
 
   disconnectedCallback(): void {
     super.disconnectedCallback();
     window.removeEventListener('resize', this.calculateSize.bind(this));
+    window.removeEventListener(
+      'update-structure-name',
+      this.updateStructureName.bind(this)
+    );
+    window.removeEventListener(
+      'update-structure-logo',
+      this.updateStructureLogo.bind(this)
+    );
   }
 
   shouldUpdate(
@@ -282,6 +302,16 @@ export class ContentMenu extends LitLoggable(LitElement) {
     this.debugLog('calculateSize', this._screenSize);
   }
 
+  updateStructureName(e: Event): void {
+    const name = (e as CustomEvent).detail?.structName;
+    if (name) this._forceOrgDisplayName = name;
+  }
+
+  updateStructureLogo(e: Event): void {
+    const logo = (e as CustomEvent).detail?.logo;
+    if (logo) this.forceOrgLogo = logo;
+  }
+
   onClose(e: Event): void {
     e.preventDefault();
     const closeEvt = new CustomEvent('close');
@@ -350,8 +380,18 @@ export class ContentMenu extends LitLoggable(LitElement) {
     }
   }
 
+  toogleSwitchOrg(e: Event): void {
+    e.preventDefault();
+    e.stopPropagation();
+    this.dispatchEvent(new CustomEvent('switch-org'));
+  }
+
   render(): TemplateResult {
     this.debugLog('Render');
+    const orgDisplayName =
+      this._forceOrgDisplayName != ''
+        ? this._forceOrgDisplayName
+        : this._currentOrg?.displayName ?? '';
     const orgImageUrl = pathHelper.getUrl(
       this.getOrgImage(),
       this.portalBaseUrl,
@@ -409,12 +449,14 @@ export class ContentMenu extends LitLoggable(LitElement) {
                     parent-screen-size="${this._screenSize}"
                     user-display-name="${this._currentUser?.name ?? ''}"
                     user-avatar-url="${avatarUrl}"
-                    org-display-name="${this._currentOrg?.displayName ?? ''}"
+                    org-display-name="${orgDisplayName}"
                     org-img-url="${orgImageUrl}"
                     user-info-portlet-url="${userInfoUrl}"
                     switch-org-portlet-url="${this.isOtherOrgs()
                       ? switchOrgUrl
                       : ''}"
+                    ?switch-org-event="${this.switchOrgEvent}"
+                    @switch-org="${this.toogleSwitchOrg}"
                   ></esco-content-user>
                 </slot>
                 <esco-content-favorites

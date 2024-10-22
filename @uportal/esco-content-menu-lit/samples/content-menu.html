@@ -106,6 +106,19 @@
         <dt>close</dt>
         <dd id="closeEvt">Not emit</dd>
       </dl>
+      <h3>Listeners</h3>
+      <dl>
+        <dt>update-structure-name</dt>
+        <dd>
+          <button type="button" id="updateStructureName">Emit</button>
+        </dd>
+      </dl>
+      <dl>
+        <dt>update-structure-logo</dt>
+        <dd>
+          <button type="button" id="updateStructureLogo">Emit</button>
+        </dd>
+      </dl>
     </div>
     <hr />
     <div>
@@ -138,6 +151,48 @@
             ).textContent = `Last emit : ${date}`;
           });
         });
+
+        let nameIdx = 0;
+        const structureNames = [
+          'LimeBrassHound',
+          'MaroonBrassSpitz',
+          'BlackZincSpaniel',
+          'GrayAluminiumPomeranian',
+          'AquaAluminiumGreyhound',
+          'BlueLeadAiredale',
+        ];
+        document
+          .querySelector('#updateStructureName')
+          .addEventListener('click', () => {
+            document.dispatchEvent(
+              new CustomEvent('update-structure-name', {
+                detail: {
+                  structName: structureNames[nameIdx],
+                },
+                bubbles: true,
+                composed: true,
+              })
+            );
+            if (nameIdx == 5) nameIdx = 0;
+            else nameIdx++;
+          });
+
+        let logoIdx = 0;
+        document
+          .querySelector('#updateStructureLogo')
+          .addEventListener('click', () => {
+            document.dispatchEvent(
+              new CustomEvent('update-structure-logo', {
+                detail: {
+                  logo: `/assets/images/logoportail${logoIdx}.jpg`,
+                },
+                bubbles: true,
+                composed: true,
+              })
+            );
+            if (logoIdx == 5) logoIdx = 0;
+            else logoIdx++;
+          });
       </script>
     </div>
   </body>

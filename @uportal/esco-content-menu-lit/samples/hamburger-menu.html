@@ -118,7 +118,8 @@
         user-info-api-url="/userinfo"
         sign-out-url="#signout"
         user-info-portlet-url="#user-info"
-        switch-org-portlet-url="#switch-org"
+        switch-org-portlet-url="/p/#switch-org"
+        switch-org-event
         show-favorites-in-slider
         cache-ttl="120"
         debug
@@ -135,10 +136,10 @@
           });
         });
 
-        document.addEventListener('click-portlet-card', e => {
+        document.addEventListener('click-portlet-card', (e) => {
           e.detail.event.preventDefault();
           console.log(`event: ${e.type}`, { ...e.detail });
-        })
+        });
       </script>
     </div>
   </body>

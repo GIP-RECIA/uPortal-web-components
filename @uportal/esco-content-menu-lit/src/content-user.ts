@@ -41,6 +41,8 @@ export class ContentUser extends LitLoggable(LitElement) {
   userAvatarUrl = '';
   @property({ type: String, attribute: 'switch-org-portlet-url' })
   switchOrgPortletUrl = process.env.VUE_APP_ORG_SWITCH_URI ?? '';
+  @property({ type: Boolean, attribute: 'switch-org-event' })
+  switchOrgEvent = false;
   @property({ type: String, attribute: 'user-info-portlet-url' })
   userInfoPortletUrl = '';
   @property({ type: Boolean, attribute: 'enable-switch' })
@@ -65,6 +67,13 @@ export class ContentUser extends LitLoggable(LitElement) {
     if (_changedProperties.has('messages')) {
       langHelper.setReference(this.messages);
     }
+  }
+
+  toogleSwitchOrg(e: Event): void {
+    if (!this.switchOrgEvent) return;
+    e.preventDefault();
+    e.stopPropagation();
+    this.dispatchEvent(new CustomEvent('switch-org'));
   }
 
   render(): TemplateResult {
@@ -127,15 +136,29 @@ export class ContentUser extends LitLoggable(LitElement) {
               ${this.switchOrgPortletUrl !== ''
                 ? html`
                     <div class="other-orgs">
-                      <a
-                        href="${this.switchOrgPortletUrl}"
-                        title="${langHelper.localTransation(
-                          'userChangeEtabUrl.title',
-                          msg(str`Select an other organization`)
-                        )}"
-                      >
-                        ${unsafeHTML(`${icon(faExchangeAlt).html}`)}
-                      </a>
+                      ${this.switchOrgEvent
+                        ? html`
+                            <button
+                              title="${langHelper.localTransation(
+                                'userChangeEtabUrl.title',
+                                msg(str`Select an other organization`)
+                              )}"
+                              @click="${this.toogleSwitchOrg}"
+                            >
+                              ${unsafeHTML(`${icon(faExchangeAlt).html}`)}
+                            </button>
+                          `
+                        : html`
+                            <a
+                              href="${this.switchOrgPortletUrl}"
+                              title="${langHelper.localTransation(
+                                'userChangeEtabUrl.title',
+                                msg(str`Select an other organization`)
+                              )}"
+                            >
+                              ${unsafeHTML(`${icon(faExchangeAlt).html}`)}
+                            </a>
+                          `}
                     </div>
                   `
                 : html``}
