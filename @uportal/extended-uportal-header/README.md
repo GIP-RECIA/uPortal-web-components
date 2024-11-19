@@ -100,6 +100,7 @@ The available messages to override are as follows:
 - `sign-out-url`: type: `String`, default: `/uPortal/Logout`, an uri/url to call when user logout (for a logout button);
 - `user-info-portlet-url`: type: `String`, default: `''`, an url/uri to the user information application;
 - `switch-org-portlet-url`: type: `String`, default: `''`, an optional url/url of a rest api to obtain institutional organization information;
+- `switch-org-event`: type: `Boolean`, default: `false`, open change etab modal. `switch-org-portlet-url` need to be change etab api url;
 - `user-org-id-attribute-name`: type: `String`, default: `'ESCOSIRENCourant[0]'`, the attribute object path to obtain the id of the organization to retrieve from the organization's api;
 - `org-logo-url-attribute-name`: type: `String`, default: `'otherAttributes.ESCOStructureLogo[0]'`, the attribute object path to obtain the organization Picture from organization details obtained from the organization's api;
 - `user-all-orgs-id-attribute-name`: type: `String`, default: `'ESCOSIREN`, the attribute object path to obtain all ids of the organizations linked to the user and to retrieve from the organization's api;
