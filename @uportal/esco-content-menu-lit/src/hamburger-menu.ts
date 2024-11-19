@@ -8,6 +8,7 @@ import HamburgerMenuScss from '@styles/hamburger-menu.scss';
 import { LitLoggable } from '@mixins/litLoggable';
 /*Helpers*/
 import sizeHelper from '@helpers/sizeHelper';
+import pathHelper from '@helpers/pathHelper';
 /*Components*/
 import './content-menu';
 import '@gip-recia/change-etab';
@@ -221,7 +222,11 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
                       <change-etab
                         show="${this._isSwitchOrg}"
                         change-etab-api="${this.switchOrgPortletUrl}"
-                        user-info-api-url="${this.userInfoApiUrl}"
+                        user-info-api-url="${pathHelper.getUrl(
+                          this.userInfoApiUrl,
+                          this.portalBaseUrl,
+                          this.debug
+                        )}"
                       ></change-etab>
                     `
                   : html``}
