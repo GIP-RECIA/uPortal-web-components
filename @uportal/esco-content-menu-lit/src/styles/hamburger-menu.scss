@@ -4,6 +4,8 @@
     text-decoration: none;
     cursor: pointer;
     padding: 5px 0;
+    background-color: transparent;
+    border-style: none;
 
     &:hover > .menu-wrapper > .hm-line {
       opacity: 0.7;

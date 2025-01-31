@@ -161,18 +161,14 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
 
     return html`
       <div class="hamburger-menu">
-        <div
+        <button
           class="content-menu-toggle"
-          aria-label="Menu"
           role="button"
           title="Menu"
-          aria-expanded="false"
-          aria-haspopup="true"
-          aria-controls="content-menu"
           @click=${this.toggleMenu}
         >
           ${this._renderIcon()}
-        </div>
+        </button>
         ${this._isLoaded
           ? html`
               <div>
