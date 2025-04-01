@@ -69,7 +69,7 @@ export default class langHelper {
       allLangs = opt.languageCodeOnly ? [pageLang.split(/-|_/)[0]] : [pageLang];
     } else {
       const fOpts = {
-        anguageCodeOnly: opt.languageCodeOnly,
+        languageCodeOnly: opt.languageCodeOnly,
         defaultLanguage: opt.defaultLanguage,
       };
       allLangs = this.getBrowserLocales(fOpts);
