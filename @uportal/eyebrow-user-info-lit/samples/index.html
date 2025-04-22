@@ -38,23 +38,50 @@
     </noscript>
     <div id="app">
       <header>
-        <eyebrow-user-info
-          messages='[{"locales": ["fr"], "messages": { "message": {"eyebrow": { "logout": "Sign out !" } }}}]'
-          menu-is-dark="false"
-          display-name="John Doe"
-          picture="https://lycees.netocentre.fr/images/icones/noPictureUser.svg"
-          avatar-size="48px"
-          config='{
-            "starter": false
-          }'
-          notification="4"
-        />
+        <shadow-1></shadow-1>
       </header>
-      <div class="content">a content for test !</div>
+      <div class="content">a content for test ! <button>DOM</button></div>
     </div>
     <script type="module">
       window.addEventListener('eyebrow-user-info', (e) => {
-        console.log('eyebrow-user-info', e.detail)
+        console.log('eyebrow-user-info', e.detail);
+      });
+
+      customElements.define('shadow-1', class extends HTMLElement {
+        constructor() {
+          super();
+        }
+
+        connectedCallback() {
+          this.attachShadow({ mode: 'open' });
+          this.shadowRoot.innerHTML = `<shadow-2></shadow-2>`;
+        }
+      });
+
+      customElements.define('shadow-2', class extends HTMLElement {
+        constructor() {
+          super();
+        }
+
+        connectedCallback() {
+          this.attachShadow({ mode: 'open' });
+          this.shadowRoot.innerHTML = `<div style="display: inline-flex;">
+            <button>ShadowDOM</button>
+            <div>
+              <eyebrow-user-info
+                messages='[{"locales": ["fr"], "messages": { "message": {"eyebrow": { "logout": "Sign out !" } }}}]'
+                menu-is-dark="false"
+                display-name="John Doe"
+                picture="https://lycees.netocentre.fr/images/icones/noPictureUser.svg"
+                avatar-size="48px"
+                config='{
+                  "starter": false
+                }'
+                notification="4"
+              />
+            </div>
+          </div>`;
+        }
       });
     </script>
   </body>

@@ -196,7 +196,7 @@ export class Eyebrow extends LitElement {
     if (
       this.isExpanded &&
       e.target instanceof HTMLElement &&
-      !this.contains(e.target)
+      !(this.contains(e.target) || e.composedPath().includes(this))
     ) {
       this.isExpanded = false;
     }
