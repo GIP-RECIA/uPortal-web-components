@@ -15,6 +15,9 @@
       "url": "https://github.com/Quentin-Guillemin"
     }
   ],
+  "files": [
+    "dist"
+  ],
   "keywords": [
     "apereo",
     "uportal",
