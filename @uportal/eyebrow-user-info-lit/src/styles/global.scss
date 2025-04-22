@@ -1,0 +1,30 @@
+@forward 'mixins';
+@import 'ress/dist/ress.min.css';
+
+$prefix: recia-;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+);
+
+* {
+  box-sizing:border-box
+}
+
+$black-10: var(--#{$prefix}black-10, rgba(#000, .1));
+$system-red: var(--#{$prefix}system-red, #AD1919);
+$hover: var(--#{$prefix}hover, #F8F8F8);
+$primary: var(--#{$prefix}primary, #0062BC);
+$shadow-strong: var(--#{$prefix}shadow-strong, 0 4px 24.4px 0);
+$body-inverted: var(--#{$prefix}body-inverted, #FFF);
+$body-bg: var(--#{$prefix}body-bg, #FFF);
+$font-size-base: 16px; // 1rem
+$body-font-size: var(--#{$prefix}body-font-size, calc($font-size-base * 0.875));
+$font-size-xs: var(--#{$prefix}font-size-xs, calc($font-size-base * 0.75));
+$font-size-sm: var(--#{$prefix}body-font-size, calc($font-size-base * 0.875));
+$font-size-md: var(--#{$prefix}font-size-md, calc($font-size-base * 1));

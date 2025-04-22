@@ -1,15 +1,15 @@
 // Do not modify this file by hand!
 // Re-generate this file by running lit-localize
 
-import { str } from '@lit/localize';
-
 /* eslint-disable no-irregular-whitespace */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export const templates = {
-  s614783f36fef685f: str`Ouvrir le menu compte`,
-  s62f1c5275951a27d: str`Fermer le menu compte`,
-  s7cfe12cd14df9950: str`Déconnexion`,
-  sf1ed7646f2755f57: str`Voir les informations de mon compte`,
-  sdfe2526362bc3224: str`avatar`,
+  s09a45db408570a7a: `Mon profil`,
+  s2489083991b9ca67: `Lancer le didacticiel`,
+  s307cffc5f576d4ef: `Menu mon compte`,
+  s38b421bef0e6a873: `Changer d'établissement`,
+  s5be3c6d61cd9182f: `Notifications`,
+  s60ded0dbc5eb918f: `Infos de l'établissement`,
+  sccaa042943974f18: `Déconnexion`,
 };

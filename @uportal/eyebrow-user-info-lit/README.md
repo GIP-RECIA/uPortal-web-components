@@ -4,21 +4,19 @@
 <eyebrow-user-info
   display-name="John Doe"
   picture="https://edu.univ.org/images/noPictureUser.svg"
-  email="john.doe@edu.univ.org"
-  logout-link="/uPortal/Logout"
   avatar-size="48px"
   menu-is-dark="true"
 ></eyebrow-user-info>
 ```
 
 - messages: optional, see [internationalization](#internationalization);
+- portalBaseUrl: optional
 - displayName: required
-- email: optional
+- function: optional
 - picture: required, the url of the user picture/avatar
-- moreLink: optional, the url to go on user information management application or any other link you want when clicking on user picture
-- logoutLink: optional, the url to sign out if you prefer to show it in the dropdown
 - menuIsDark: default value is true, set the text color into the menu to white, if false will be black, usefull for colored background
 - avatarSize: default value is "28px", set the width and heigth size of the image.
+- config: optional, remove list items or add link instead of event
 
 ### internationalization
 
@@ -39,11 +37,13 @@ The available messages to override are as follows:
 {
   "message": {
     "eyebrow": {
-      "close": "Close account menu",
-      "open": "Open account menu",
-      "avatar": "avatar",
-      "information": "See my account information",
-      "logout": "Sign out"
+      "menu": "My account menu",
+      "notification": "Notifications",
+      "information": "My profile",
+      "info-etab": "School info",
+      "change-etab": "Change school",
+      "starter": "Start tutorial",
+      "logout": "Lougout"
     }
   }
 }
@@ -90,11 +90,9 @@ You should use the cdn link, or use a deployed version localy for test only !
  <div class="eyebrow-user-info">
      <eyebrow-user-info display-name="${userInfo['displayName']}"
                  picture="${avatar}"
-                 email="${personManager.getPerson(request).getAttribute(userMailAttributeName[0])}"
-                 more-link="${moreUserInfoUrl[0]}"
-                 logout-link="${portalLogoutUrl[0]}"
                  avatar-size="${avatarSize[0]}"
-                 menu-is-dark="true"></eyebrow-user-info>
+                 menu-is-dark="true"
+                 config='{ "notification": false, "settings": { "link": "${moreUserInfoUrl[0]}" }, "info-etab": false, "starter": false, "logout": { "link": "portalLogoutUrl[0]" }}'></eyebrow-user-info>
  </div>
 ```
 
@@ -144,11 +142,6 @@ create the file `eyebrow-user-info.portlet-definition.xml` and import it
          <name>avatarSize</name>
          <readOnly>true</readOnly>
          <value>28px</value>
-     </portlet-preference>
-     <portlet-preference>
-         <name>userMailAttributeName</name>
-         <readOnly>true</readOnly>
-         <value>mail</value>
      </portlet-preference>
      <portlet-preference>
          <name>userPictureAttributeName</name>

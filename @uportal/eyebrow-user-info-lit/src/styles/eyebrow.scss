@@ -1,111 +1,153 @@
-$grey: #d0d0d0;
+@use 'sass:map';
+@use './global.scss' as *;
+@import '@fortawesome/fontawesome-svg-core/styles.css';
 
-.user-info {
-  > .dropdown {
-    height: 100%;
-    width: 100%;
-    position: relative;
-    display: inline-block;
+.eyebrow {
+  position: relative;
+  width: fit-content;
+
+  & > &-notification {
+    position: absolute;
+    top: 0;
     right: 0;
-    > .dropdown-menu {
-      cursor: pointer;
-      display: flex;
-      flex-flow: row nowrap;
-      align-items: center;
-      color: #000;
-      &.lighter {
-        color: white;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    background-color: $primary;
+  }
+
+  & > &-button {
+    display: flex;
+    align-items: center;
+    column-gap: 12px;
+    border-radius: 50px;
+
+    > .picture {
+      height: 46px;
+      width: 46px;
+      border-radius: 50%;
+    }
+
+    > .info {
+      display: none;
+      align-items: baseline;
+      flex-direction: column;
+
+      > .displayname {
+        font-size: $font-size-md;
+        font-weight: bold;
       }
-      :not(:first-child) {
-        margin-left: 5px;
+
+      > .function {
+        font-size: $font-size-xs;
       }
-      > .user-name {
-        display: block;
+    }
+
+    > svg {
+      display: none;
+      opacity: .3;
+      margin-right: 12px;
+    }
+
+    &:hover,
+    &:focus-visible {
+      > svg {
+        opacity: 1;
       }
-      > .user-avatar {
-        display: flex;
+    }
+
+    &:focus-visible {
+      outline: 4px solid $primary;
+    }
+  }
+
+  & > &-menu {
+    @include list-unstyled;
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    min-width: 248px;
+    max-width: calc(100vw - 32px);
+    background-color: $body-bg;
+    border-radius: 8px;
+    box-shadow: $shadow-strong $black-10;
+    overflow: hidden;
+    z-index: 1000;
+
+    > li {
+      > a,
+      > button {
+        @include link-unstyled;
+        display: inline-flex;
         align-items: center;
-        > img {
-          background-color: $grey;
-          border-radius: 50%;
-          overflow: hidden;
+        justify-content: space-between;
+        column-gap: 16px;
+        padding: 14px 12px;
+        text-wrap: nowrap;
+        font-size: $font-size-sm;
+        width: 100%;
+
+        > svg {
+          min-width: $body-font-size;
+          opacity: .3;
+        }
+
+        &#notification {
+          position: relative;
+
+          > .counter {
+            position: absolute;
+            right: 12px;
+            padding: 4px 10px;
+            border-radius: 27px;
+            background-color: $primary;
+            color: $body-inverted;
+            font-size: $font-size-xs;
+            font-weight: bold;
+          }
+        }
+
+        &#logout {
+          color: $system-red;
+        }
+
+        &:hover,
+        &:focus-visible {
+          font-weight: 500;
+          background-color: $hover;
+          outline: none;
+
+          > svg {
+            opacity: 1;
+          }
         }
       }
     }
-    > .dropdown-content {
-      position: absolute;
-      min-width: 280px;
-      background-color: #fff;
-      color: #000;
-      box-shadow: 0 5px 5px -3px #888, 5px 5px 5px -4px #888;
-      z-index: 15;
-      right: 0;
-      text-align: initial;
-      visibility: visible;
-      opacity: 1;
-      transition: opacity 800ms, visibility 800ms;
-      animation: fade 800ms;
-      &.closed {
-        visibility: hidden;
-        opacity: 0;
-      }
-      > div.user-details {
-        padding: 25px 10px;
+  }
+
+  @media (width >= map.get($grid-breakpoints, md)) {
+    & > &-notification {
+      display: none;
+    }
+
+    & > &-button {
+      > .info {
         display: flex;
-        flex-flow: row nowrap;
-        font-size: 14px;
-        > * {
-          margin: 0 0 0 15px;
-        }
-        > :last-child {
-          margin-right: 15px;
-        }
-        > .user-avatar {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          img {
-            background-color: $grey;
-            border-radius: 50%;
-            height: 68px;
-            width: 68px;
-          }
-        }
-        .wrapper-info {
-          display: flex;
-          flex-flow: column nowrap;
-          align-self: center;
-        }
       }
-      > .sign-out {
-        background-color: $grey;
-        width: 100%;
-        text-align: right;
-        &:hover {
-          background-color: darken($grey, 10%);
-        }
-        > a {
-          display: flex;
-          padding-right: 15px;
-          text-decoration: none;
-          color: inherit;
-          width: 100%;
-          align-content: center;
-          justify-content: end;
-          height: 32px;
-          > * {
-            line-height: 32px;
-            vertical-align: top;
-          }
-          > span {
-            text-transform: uppercase;
-            margin-right: 5px;
-          }
-          .svg-inline--fa {
-            height: 15px;
-            margin: auto 15px auto 0px;
-          }
-        }
+
+      > svg {
+        display: unset;
+      }
+    }
+
+    & > &-menu > li {
+      &:has(> button#notification),
+      &:has(> button#info-etab) {
+        display: none;
+      }
+
+      &:not(:last-child) {
+        border-bottom: 1px solid $black-10;
       }
     }
   }

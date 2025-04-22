@@ -39,16 +39,23 @@
     <div id="app">
       <header>
         <eyebrow-user-info
-          :menu-is-dark="false"
+          messages='[{"locales": ["fr"], "messages": { "message": {"eyebrow": { "logout": "Sign out !" } }}}]'
+          menu-is-dark="false"
           display-name="John Doe"
-          picture="https://lycees.netocentre.fr/images/icones//noPictureUser.svg"
-          email="john.doe@edu.univ.org"
-          logout-link="/uPortal/Logout"
-          more-link="/uPortal/More"
+          picture="https://lycees.netocentre.fr/images/icones/noPictureUser.svg"
           avatar-size="48px"
+          config='{
+            "starter": false
+          }'
+          notification="4"
         />
       </header>
       <div class="content">a content for test !</div>
     </div>
+    <script type="module">
+      window.addEventListener('eyebrow-user-info', (e) => {
+        console.log('eyebrow-user-info', e.detail)
+      });
+    </script>
   </body>
 </html>

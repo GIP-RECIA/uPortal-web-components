@@ -2,24 +2,33 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
 <file target-language="fr" source-language="en" original="lit-localize-inputs" datatype="plaintext">
 <body>
-<trans-unit id="s614783f36fef685f">
-  <source>Close account menu</source>
-  <target>Ouvrir le menu compte</target>
+<trans-unit id="s5be3c6d61cd9182f">
+  <source>Notifications</source>
+  <target>Notifications</target>
 </trans-unit>
-<trans-unit id="s62f1c5275951a27d">
-  <source>Open account menu</source>
-  <target>Fermer le menu compte</target>
+<trans-unit id="s09a45db408570a7a">
+  <source>My profile</source>
+  <target>Mon profil</target>
 </trans-unit>
-<trans-unit id="sdfe2526362bc3224">
-  <source>avatar</source>
+<trans-unit id="s60ded0dbc5eb918f">
+  <source>School info</source>
+  <target>Infos de l'établissement</target>
 </trans-unit>
-<trans-unit id="sf1ed7646f2755f57">
-  <source>See my account information</source>
-  <target>Voir les informations de mon compte</target>
+<trans-unit id="s38b421bef0e6a873">
+  <source>Change school</source>
+  <target>Changer d'établissement</target>
 </trans-unit>
-<trans-unit id="s7cfe12cd14df9950">
-  <source>Sign out</source>
+<trans-unit id="s2489083991b9ca67">
+  <source>Start tutorial</source>
+  <target>Lancer le didacticiel</target>
+</trans-unit>
+<trans-unit id="sccaa042943974f18">
+  <source>Lougout</source>
   <target>Déconnexion</target>
+</trans-unit>
+<trans-unit id="s307cffc5f576d4ef">
+  <source>My account menu</source>
+  <target>Menu mon compte</target>
 </trans-unit>
 </body>
 </file>
