@@ -1,11 +1,19 @@
 {
   "name": "@gip-recia/eyebrow-user-info-lit",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Web component to display into eyebrow menu a user information menu with profile picture and more.",
   "license": "Apache-2.0",
   "author": "Julien Gribonvald <julien.gribonvald@gmail.com>",
   "contributors": [
-    "Grégory Brousse <pro@gregory-brousse.fr>"
+    {
+      "name": "Grégory Brousse",
+      "email": "pro@gregory-brousse.fr"
+    },
+    {
+      "name": "Quentin Guillemin",
+      "email": "quentin.guillemin@recia.fr",
+      "url": "https://github.com/Quentin-Guillemin"
+    }
   ],
   "keywords": [
     "apereo",
