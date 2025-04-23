@@ -75,7 +75,11 @@
       </dl>
       <dl>
         <dt>switch-org-portlet-url</dt>
-        <dd>#switch-org</dd>
+        <dd>http://localhost:3000/switch-org</dd>
+      </dl>
+      <dl>
+        <dt>switch-org-event</dt>
+        <dd>true</dd>
       </dl>
       <dl>
         <dt>user-org-id-attribute-name</dt>
@@ -91,7 +95,7 @@
       </dl>
       <dl>
         <dt>show-favorites-in-slider</dt>
-        <dd></dd>
+        <dd>true</dd>
       </dl>
       <dl>
         <dt>debug</dt>
@@ -101,6 +105,13 @@
       <dl>
         <dt>Toggle</dt>
         <dd id="toggleEvt">Not emit</dd>
+      </dl>
+      <h3>Listeners</h3>
+      <dl>
+        <dt>switch-org</dt>
+        <dd>
+          <button type="button" id="switchOrg">Emit</button>
+        </dd>
       </dl>
     </div>
     <hr />
@@ -118,7 +129,7 @@
         user-info-api-url="/userinfo"
         sign-out-url="#signout"
         user-info-portlet-url="#user-info"
-        switch-org-portlet-url="/p/#switch-org"
+        switch-org-portlet-url="http://localhost:3000/switch-org"
         switch-org-event
         show-favorites-in-slider
         cache-ttl="120"
@@ -127,13 +138,15 @@
       </esco-hamburger-menu>
       <div>Test transparence</div>
       <script defer>
-        document.querySelectorAll('esco-hamburger-menu').forEach((el) => {
-          el.addEventListener('toggle', (e) => {
-            const date = new Date().toLocaleTimeString();
-            document.querySelector(
-              '#toggleEvt'
-            ).textContent = `Last emit : ${date} | Visible : ${e.detail.isVisible}`;
-          });
+        const hamburger = document.querySelector('esco-hamburger-menu');
+        hamburger.addEventListener('toggle', (e) => {
+          const date = new Date().toLocaleTimeString();
+          document.querySelector(
+            '#toggleEvt'
+          ).textContent = `Last emit : ${date} | Visible : ${e.detail.isVisible}`;
+        });
+        document.querySelector('#switchOrg').addEventListener('click', (e) => {
+          hamburger.dispatchEvent(new CustomEvent('switch-org'));
         });
 
         document.addEventListener('click-portlet-card', (e) => {

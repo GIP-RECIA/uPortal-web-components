@@ -124,6 +124,16 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
     this.debugLog('Component loaded');
   }
 
+  connectedCallback(): void {
+    super.connectedCallback();
+    this.addEventListener('switch-org', this.toggleSwitchOrg.bind(this));
+  }
+
+  disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this.removeEventListener('switch-org', this.toggleSwitchOrg.bind(this));
+  }
+
   protected shouldUpdate(): boolean {
     if (this.defaultOrgLogo === '') {
       this.errorLog('default-org-logo attribute is required');
@@ -213,23 +223,23 @@ export class HamburgerMenu extends LitLoggable(LitElement) {
                     @switch-org=${this.toggleSwitchOrg}
                   ></esco-content-menu>
                 </slot>
-                ${isSwitchOrgEvent
-                  ? html`
-                      <change-etab
-                        show="${this._isSwitchOrg}"
-                        change-etab-api="${this.switchOrgPortletUrl}"
-                        user-info-api-url="${pathHelper.getUrl(
-                          this.userInfoApiUrl,
-                          this.portalBaseUrl,
-                          this.debug
-                        )}"
-                      ></change-etab>
-                    `
-                  : html``}
               </div>
             `
           : html``}
       </div>
+      ${isSwitchOrgEvent
+        ? html`
+            <change-etab
+              show="${this._isSwitchOrg}"
+              change-etab-api="${this.switchOrgPortletUrl}"
+              user-info-api-url="${pathHelper.getUrl(
+                this.userInfoApiUrl,
+                this.portalBaseUrl,
+                this.debug
+              )}"
+            ></change-etab>
+          `
+        : html``}
     `;
   }
 
