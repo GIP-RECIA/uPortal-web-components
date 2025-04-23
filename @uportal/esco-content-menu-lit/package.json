@@ -1,11 +1,19 @@
 {
   "name": "@gip-recia/esco-content-menu-lit",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "description": "Web component to display into eyebrow menu a user information menu with profile picture and more.",
   "license": "Apache-2.0",
   "author": "Julien Gribonvald <julien.gribonvald@gmail.com>",
   "contributors": [
-    "Grégory Brousse <pro@gregory-brousse.fr>"
+    {
+      "name": "Grégory Brousse",
+      "email": "pro@gregory-brousse.fr"
+    },
+    {
+      "name": "Quentin Guillemin",
+      "email": "quentin.guillemin@recia.fr",
+      "url": "https://github.com/Quentin-Guillemin"
+    }
   ],
   "keywords": [
     "apereo",
