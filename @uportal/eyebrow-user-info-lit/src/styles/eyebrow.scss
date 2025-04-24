@@ -6,6 +6,15 @@
   position: relative;
   width: fit-content;
 
+  &.force-new-ui {
+    font-family: DM Sans, "sans-serif";
+    font-style: normal;
+    font-weight: 400;
+    font-size: var(--recia-body-font-size);
+    letter-spacing: 0;
+    color: var(--recia-body-color, #1e1e1e);
+  }
+
   & > &-notification {
     position: absolute;
     top: 0;

@@ -11,6 +11,7 @@ import {
 import { customElement, property, state } from 'lit/decorators.js';
 import { keyed } from 'lit/directives/keyed.js';
 import { styleMap } from 'lit/directives/style-map.js';
+import { classMap } from 'lit/directives/class-map.js';
 import {
   unsafeHTML,
   UnsafeHTMLDirective,
@@ -74,6 +75,9 @@ export class Eyebrow extends LitElement {
 
   @property({ type: Number })
   notification = 0;
+
+  @property({ type: Boolean, attribute: 'force-new-ui' })
+  forceNewUi = false;
 
   @state()
   isExpanded = false;
@@ -302,7 +306,12 @@ export class Eyebrow extends LitElement {
 
   render(): TemplateResult {
     return html`
-      <div class="eyebrow">
+      <div
+        class="${classMap({
+          eyebrow: true,
+          'force-new-ui': this.forceNewUi,
+        })}"
+      >
         <div
           class="eyebrow-notification"
           style="${styleMap({
