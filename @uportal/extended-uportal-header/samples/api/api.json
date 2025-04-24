@@ -993,18 +993,18 @@
     }
   },
   "orginfo": {
-    "18450311800020": {
-      "description": "COLLECTIVITE LOCALE",
-      "displayName": "GIP Recia",
-      "id": "18450311800020",
-      "name": "GIP-RECIA",
+    "00000000000001": {
+      "id": "00000000000001",
+      "name": "LPO LYC METIER FICTIF LEN OLIVET",
+      "displayName": "LYCÉE FICTIF",
+      "description": "LYCEE POLYVALENT",
       "otherAttributes": {}
     },
     "77551105800056": {
-      "description": "UNIVERSITY",
-      "displayName": "My University",
       "id": "77551105800056",
       "name": "My University",
+      "displayName": "My University",
+      "description": "UNIVERSITY",
       "otherAttributes": {
         "ESCOStructureLogo": [
           "/annuaire_images/logos/77551105800056/logoportail0.jpg?2"
@@ -17547,8 +17547,8 @@
     }
   },
   "userinfo": {
-    "ESCOSIREN": ["18450311800020", "77551105800056"],
-    "ESCOSIRENCourant": ["18450311800020"],
+    "ESCOSIREN": ["00000000000001", "77551105800056"],
+    "ESCOSIRENCourant": ["00000000000001"],
     "aud": "https://my.edu/uPortal",
     "email": "john.doe@my.edu",
     "exp": 1530779747,
@@ -18266,5 +18266,66 @@
     "portlet": {
       "title": "Demo Prolongation ENT"
     }
+  },
+  "switch-org": {
+    "structCurrent": {
+      "id": "00000000000001",
+      "name": "LPO LYC METIER FICTIF LEN OLIVET",
+      "displayName": "LYCÉE FICTIF",
+      "description": "LYCEE POLYVALENT",
+      "otherAttributes": {},
+      "code": "0450000X"
+    },
+    "sirenStructures": {
+      "191800000000001": {
+        "id": "191800000000001",
+        "name": "CLG FICTIF CLG 18 BOURGES",
+        "displayName": "CLG FICTIF CLG 18 BOURGES",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0180000A"
+      },
+      "192800000000001": {
+        "id": "192800000000001",
+        "name": "CLG FICTIF CLG 28 CHARTRES",
+        "displayName": "CLG FICTIF CLG 28 CHARTRES",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0280000A"
+      },
+      "193600000000001": {
+        "id": "193600000000001",
+        "name": "CLG FICTIF CLG 36 CHATEAUROUX",
+        "displayName": "CLG FICTIF CLG 36 CHATEAUROUX",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0360000A"
+      },
+      "193700000000001": {
+        "id": "193700000000001",
+        "name": "CLG FICTIF CLG 37 TOURS",
+        "displayName": "CLG FICTIF CLG 37 TOURS",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0370000A"
+      },
+      "194100000000001": {
+        "id": "194100000000001",
+        "name": "CLG FICTIF CLG 41 BLOIS",
+        "displayName": "CLG FICTIF CLG 41 BLOIS",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0410000A"
+      },
+      "194500000000001": {
+        "id": "194500000000001",
+        "name": "CLG FICTIF CLG 45 ORLEANS",
+        "displayName": "CLG FICTIF CLG 45 ORLEANS",
+        "description": "COLLEGE",
+        "otherAttributes": {},
+        "code": "0450000A"
+      }
+    },
+    "id": "test"
   }
 }

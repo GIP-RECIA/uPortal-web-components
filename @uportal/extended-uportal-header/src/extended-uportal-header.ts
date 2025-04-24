@@ -14,6 +14,7 @@ import { unsafeHTML } from 'lit-html/directives/unsafe-html.js';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { customElement, property, state } from 'lit/decorators.js';
 import { msg, str, updateWhenLocaleChanges } from '@lit/localize';
+import { createRef, Ref, ref } from 'lit/directives/ref.js';
 /** Helpers */
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import sizeHelper from '@helpers/sizeHelper';
@@ -257,6 +258,8 @@ export class ExtendedUportalHeader extends LitElement {
   private _loadingData = false;
   private _loadingTemplate = false;
 
+  hamburgerRef: Ref<HTMLElement> = createRef();
+
   constructor() {
     super();
     if (this.domain === '') {
@@ -278,6 +281,11 @@ export class ExtendedUportalHeader extends LitElement {
     ['mousemove', 'click', 'keypress'].every((event) =>
       document.addEventListener(event, this._handleUserAction.bind(this))
     );
+    window.addEventListener('eyebrow-user-info', (e: Event) => {
+      if ((e as CustomEvent).detail.type === 'change-etab') {
+        this.hamburgerRef.value?.dispatchEvent(new CustomEvent('switch-org'));
+      }
+    });
   }
 
   disconnectedCallback(): void {
@@ -339,6 +347,7 @@ export class ExtendedUportalHeader extends LitElement {
       this._makeUrl(this.userInfoApiUrl),
       this._makeUrl(this.layoutApiUrl),
       this.orgAttributeName,
+      this.userAllOrgsIdAttributeName,
       this._userApiResult,
       this.debug
     );
@@ -650,6 +659,7 @@ export class ExtendedUportalHeader extends LitElement {
       ? html` <div id="extended-uportal-header-menu">
           <slot name="menu">
             <esco-hamburger-menu
+              ${ref(this.hamburgerRef)}
               .messages=${this.messages}
               portal-base-url="${this.domain}"
               favorites-portlet-card-size="${this.favoritesPortletCardSize}"
@@ -693,10 +703,24 @@ export class ExtendedUportalHeader extends LitElement {
               :menu-is-dark="false"
               display-name="${this._userInfos.displayName}"
               picture="${this._picture()}"
-              email="${this._userInfos.email}"
-              logout-link="${this.signOutUrl}"
-              more-link="${this.userInfoPortletUrl}"
               avatar-size="28px"
+              config='{
+                "notification": false,
+                "settings": {
+                  "link": "${this.userInfoPortletUrl}"
+                },
+                "info-etab": false,
+                "change-etab": ${this._userInfos.hasOtherOrgs
+                ? !this.switchOrgPortletUrl.includes('/p/')
+                  ? '{ "link": null }'
+                  : `{ "link": "${this._makeUrl(this.switchOrgPortletUrl)}" }`
+                : 'false'},
+                "starter": false,
+                "logout": {
+                  "link": "${this.signOutUrl}"
+                }
+              }'
+              force-new-ui
             ></eyebrow-user-info>
           </slot>
         </div>`

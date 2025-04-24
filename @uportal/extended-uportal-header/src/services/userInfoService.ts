@@ -9,12 +9,14 @@ export interface userInfo {
   picture?: string;
   email: string;
   orgId?: string;
+  hasOtherOrgs: boolean;
 }
 export default class userInfoService {
   static async get(
     userInfoApiUrl: string,
     layoutApiUrl: string,
     orgIdAttribute: string,
+    orgIdsAttribute: string,
     userInfo: OIDCResponse | null = null,
     debug: boolean
   ): Promise<userInfo | null> {
@@ -63,6 +65,9 @@ export default class userInfoService {
           picture: userInfoFetch?.decoded?.picture as string,
           email: userInfoFetch?.decoded?.email,
           orgId: get(userInfoFetch?.decoded, orgIdAttribute) as string,
+          hasOtherOrgs:
+            (get(userInfoFetch?.decoded, orgIdsAttribute) as string[]).length >
+            1,
         };
         if (user.displayName && user.orgId) return user;
       }
