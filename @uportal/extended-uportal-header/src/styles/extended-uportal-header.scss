@@ -79,9 +79,6 @@
       margin-left: var(--ext-header-tpl-spaces);
       margin-right: var(--ext-header-tpl-spaces);
     }
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
   }
   #extended-uportal-header-login {
     a.login-button {
