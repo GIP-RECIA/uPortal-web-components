@@ -1,6 +1,6 @@
 {
   "name": "@gip-recia/extended-uportal-header",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "description": "a component to deport the uPortal menu",
   "author": "Gregory Brousse <pro@gregory-brousse.fr>",
   "main": "dist/js/extended-uportal-header.js",
@@ -10,7 +10,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@gip-recia/esco-content-menu-lit": "^0.4.1",
-    "@gip-recia/eyebrow-user-info-lit": "^1.1.0",
+    "@gip-recia/eyebrow-user-info-lit": "^1.1.1",
     "core-js": "^3.25.1",
     "lit": "^2.0.2",
     "lodash": "^4.17.21",
