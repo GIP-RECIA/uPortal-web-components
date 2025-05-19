@@ -285,7 +285,7 @@ export class Eyebrow extends LitElement {
             ? html`
                 <a
                   id="${item.id}"
-                  href="${item.link}"
+                  href="${pathHelper.getUrl(item.link, this.portalBaseUrl)}"
                   @click="${this.closeDropdown}"
                 >
                   ${content}
