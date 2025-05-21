@@ -11,5 +11,5 @@ export const templates = {
   s38b421bef0e6a873: `Changer d'établissement`,
   s5be3c6d61cd9182f: `Notifications`,
   s60ded0dbc5eb918f: `Infos de l'établissement`,
-  sccaa042943974f18: `Déconnexion`,
+  s67749057edb2586b: `Déconnexion`,
 };

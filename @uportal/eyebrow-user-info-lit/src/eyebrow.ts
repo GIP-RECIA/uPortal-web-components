@@ -247,7 +247,7 @@ export class Eyebrow extends LitElement {
       ),
       [ItemType.Logout]: langHelper.localTranslation(
         'message.eyebrow.logout',
-        msg('Lougout')
+        msg('Logout')
       ),
     };
   }
