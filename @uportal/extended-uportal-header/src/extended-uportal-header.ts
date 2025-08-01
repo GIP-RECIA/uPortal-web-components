@@ -242,6 +242,8 @@ export class ExtendedUportalHeader extends LitElement {
   portletInfoApiUrl = '';
   @property({ type: String })
   fname = '';
+  @property({ type: String, attribute: 'dnma-url' })
+  dnmaUrl = '/esciti/dnma/dnma.js';
   @property({ type: Boolean })
   debug = false;
 
@@ -335,6 +337,7 @@ export class ExtendedUportalHeader extends LitElement {
     await this._getTemplate();
     this._loadPortletInformations();
     this._debounceLoad();
+    this._initDnma();
   }
 
   private _debounceLoad = debounce(this._load.bind(this), 500);
@@ -366,6 +369,37 @@ export class ExtendedUportalHeader extends LitElement {
       return;
     }
     this._loaded = true;
+  }
+
+  private _initDnma(): void {
+    this.dnmaUrl += `?v=${new Date().getMonth()}-${new Date().getDay()}`;
+    const { dnmaUrl, fname } = this;
+    const data = { dnmaUrl, fname };
+    console.log('_initDnma', data);
+
+    if (!document.querySelector('script#dnma')) {
+      const dnmaScript = document.createElement('script');
+      dnmaScript.id = 'dnma';
+      dnmaScript.src = this._makeUrl(this.dnmaUrl);
+      document.body.appendChild(dnmaScript);
+
+      const dnmaSetupScript = document.createElement('script');
+      dnmaSetupScript.type = 'text/javascript';
+      dnmaSetupScript.text = `
+        try {
+          if (ENT4DNMA) {
+            ENT4DNMA.markPage('${fname}');
+            ENT4DNMA.markOnEvent('click-portlet-card');
+          }
+        } catch (error) {
+          console.info('DNMA is not available');
+        }
+      `;
+
+      setTimeout(() => {
+        document.body.appendChild(dnmaSetupScript);
+      }, 1000);
+    }
   }
 
   private _debounceRenewToken = debounce(this._renewToken.bind(this), 500);
@@ -457,58 +491,59 @@ export class ExtendedUportalHeader extends LitElement {
     debug: false,
   };
 
-  private async _overrideProperties() {
+  private async _overrideProperties(): Promise<void> {
     let config = this.template?.config;
-    if (config) {
-      config = Object.fromEntries(
-        Object.entries(config).map(([key, value]) => [
-          key.replace(/-./g, (m) => m.toUpperCase()[1]),
-          value,
-        ])
+    if (!config) {
+      return;
+    }
+    config = Object.fromEntries(
+      Object.entries(config).map(([key, value]) => [
+        key.replace(/-./g, (m) => m.toUpperCase()[1]),
+        value,
+      ])
+    );
+
+    for (const [key, value] of Object.entries(config)) {
+      const currentValue = this[key as keyof overridableProperties];
+      const defaultValue =
+        this._defaultProperties[key as keyof overridableProperties];
+      const keepCurrent = !!this.dontOverride?.includes(
+        key as keyof overridableProperties
       );
 
-      for (const [key, value] of Object.entries(config)) {
-        const currentValue = this[key as keyof overridableProperties];
-        const defaultValue =
-          this._defaultProperties[key as keyof overridableProperties];
-        const keepCurrent = !!this.dontOverride?.includes(
-          key as keyof overridableProperties
-        );
-
-        let override = false;
-        switch (typeof currentValue) {
-          case 'object':
-            if (
-              Array.isArray(currentValue) &&
-              Array.isArray(defaultValue) &&
-              currentValue.every((val) => defaultValue.includes(val))
-            )
+      let override = false;
+      switch (typeof currentValue) {
+        case 'object':
+          if (
+            Array.isArray(currentValue) &&
+            Array.isArray(defaultValue) &&
+            currentValue.every((val) => defaultValue.includes(val))
+          )
+            override = true;
+          else if (defaultValue === null) {
+            if (currentValue === defaultValue || currentValue.length === 0)
               override = true;
-            else if (defaultValue === null) {
-              if (currentValue === defaultValue || currentValue.length === 0)
-                override = true;
-            }
-            break;
-          default:
-            if (currentValue === defaultValue || currentValue === '')
-              override = true;
-            break;
-        }
+          }
+          break;
+        default:
+          if (currentValue === defaultValue || currentValue === '')
+            override = true;
+          break;
+      }
 
-        this.debug &&
-          console.log({
-            key,
-            current: { value: currentValue, type: typeof currentValue },
-            default: { value: defaultValue, type: typeof defaultValue },
-            received: { value, type: typeof value },
-            override,
-            keepCurrent,
-          });
+      this.debug &&
+        console.log({
+          key,
+          current: { value: currentValue, type: typeof currentValue },
+          default: { value: defaultValue, type: typeof defaultValue },
+          received: { value, type: typeof value },
+          override,
+          keepCurrent,
+        });
 
-        if (override && !keepCurrent) {
-          this[key as keyof overridableProperties] = value as never;
-          if (key === 'messages') langHelper.setReference(this.messages);
-        }
+      if (override && !keepCurrent) {
+        this[key as keyof overridableProperties] = value as never;
+        if (key === 'messages') langHelper.setReference(this.messages);
       }
     }
   }

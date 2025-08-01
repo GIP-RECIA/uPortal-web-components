@@ -13,6 +13,11 @@ export default class templateService {
     templateApiUrl: string,
     domain: string
   ): Promise<template | null> {
+    if (templateApiUrl.trim().length <= 0) {
+      console.error('Incorrect template API URL', templateApiUrl);
+      return null;
+    }
+
     try {
       const options = {
         method: 'GET',
